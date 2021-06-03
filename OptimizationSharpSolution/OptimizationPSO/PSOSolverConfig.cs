@@ -22,6 +22,10 @@ namespace OptimizationPSO
 
         public int RandomSeed { get; internal set; } = 0;
 
+        internal PSOSolverConfig()
+        {
+        }
+
         public static PSOSolverConfig CreateDefault(int numberParticles, 
             int maxEpochs,
             double[] lowerBound,
