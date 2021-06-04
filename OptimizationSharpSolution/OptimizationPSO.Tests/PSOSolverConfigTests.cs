@@ -25,7 +25,7 @@ namespace OptimizationPSO.Tests
             Assert.AreEqual(config.C1CognitiveWeight, 1.49445);
             Assert.AreEqual(config.C2SocialWeight, 1.49445);
             Assert.AreEqual(config.VelocityInitialAttenuation, 0.1);
-            Assert.AreEqual(config.ParticleResetProbability, 0.0);
+            Assert.AreEqual(config.ParticleResetProbability, 0.001);
         }
 
         [Test]

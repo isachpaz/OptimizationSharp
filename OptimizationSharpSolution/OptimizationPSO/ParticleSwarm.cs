@@ -3,9 +3,9 @@
     using System;
     using System.Threading.Tasks;
 
-    public delegate void EpochDelegate(PSOSolver sender, PSOResult result);
+    public delegate void EpochDelegate(ParticleSwarm sender, PSOResult result);
 
-    public class PSOSolver
+    public abstract class ParticleSwarm
     {
         public PSOSolverConfig Config { get; }
         public event EpochDelegate OnAfterEpoch;
@@ -20,16 +20,16 @@
         /// Gets the best fitness of all Particles.
         /// </summary>
         /// <value>The best fitness.</value>
-        public double BestFitness { get; private set; }
+        public double BestFitness { get; protected set; }
 
         /// <summary>
         /// Gets the best position of all Particles.
         /// </summary>
         /// <value>The best position.</value>
-        public double[] BestPosition { get; private set; }
+        public double[] BestPosition { get; protected set; }
         private Random _random = new Random();
-        private Particle[] Particles { get; set; }
-        private Func<double[], double> FitnessFunc { get; }
+        protected Particle[] Particles { get; set; }
+        protected Func<double[], double> FitnessFunc { get; }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:ParticleSwarmOptimization.ParticleSwarm"/> class.
@@ -37,7 +37,7 @@
         /// </summary>
         /// <param name="config">PSOSolverConfig .</param>
         /// <param name="evalFunc">Evaluation function which takes the particle positions and returns its fitness.</param>
-        public PSOSolver(PSOSolverConfig config, Func<double[], double> evalFunc)
+        public ParticleSwarm(PSOSolverConfig config, Func<double[], double> evalFunc)
         {
             if (config.LowerBound.Length != config.UpperBound.Length)
                 throw new ArgumentException("Dimensions of lower and upper bound do not match");
@@ -47,31 +47,9 @@
         }
 
 
-        private void Initialize()
-        {
-            var numDimensions = Config.LowerBound.Length;
-            var numParticles = Config.NumParticles;
+        protected abstract void Initialize();
 
-            BestFitness = -double.MaxValue;
-            BestPosition = new double[numDimensions];
-            Particles = new Particle[numParticles];
-
-            for (int i = 0; i < numParticles; i++)
-            {
-                var p = new Particle(numDimensions);
-
-                for (int j = 0; j < numDimensions; j++)
-                {
-                    var diff = Config.UpperBound[j] - Config.LowerBound[j];
-                    p.position[j] = NextDoubleInRange(Config.LowerBound[j], Config.UpperBound[j]);
-                    p.velocity[j] = NextDoubleInRange(-diff, +diff);
-                }
-
-                Particles[i] = p;
-            }
-        }
-
-        private double NextDoubleInRange(double min, double max)
+        protected double NextDoubleInRange(double min, double max)
         {
             return _random.NextDouble() * (max - min) + min;
         }
@@ -112,25 +90,7 @@
             }
         }
 
-        private void EvaluateParticle(Particle p)
-        {
-            p.fitness = FitnessFunc(p.position);
-
-            if (p.fitness > p.bestFitness)
-            {
-                p.bestFitness = p.fitness;
-                Array.Copy(p.position, p.bestPosition, p.position.Length);
-
-                lock (this)
-                {
-                    if (p.bestFitness > BestFitness)
-                    {
-                        BestFitness = p.bestFitness;
-                        Array.Copy(p.bestPosition, BestPosition, p.bestPosition.Length);
-                    }
-                }
-            }
-        }
+        protected abstract void EvaluateParticle(Particle p);
 
         private void MoveParticle(Particle p)
         {
@@ -152,7 +112,7 @@
             }
         }
 
-        public PSOResult Minimize()
+        public PSOResult Solve()
         {
             Initialize();
             this.Step(Config.MaxEpochs, i => Math.Abs(BestFitness) < Config.AcceptanceError);

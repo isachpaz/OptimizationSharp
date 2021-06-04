@@ -43,7 +43,11 @@
   <ItemGroup>
     <Compile Include="ArrayHelpers.cs" />
     <Compile Include="Particle.cs" />
-    <Compile Include="PSOSolver.cs" />
+    <Compile Include="ParticleMaximization.cs" />
+    <Compile Include="ParticleMinimization.cs" />
+    <Compile Include="ParticleSwarm.cs" />
+    <Compile Include="ParticleSwarmMaximization.cs" />
+    <Compile Include="ParticleSwarmMinimization.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PSOResult.cs" />
     <Compile Include="PSOSolverConfig.cs" />

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace OptimizationPSO
 {
-    internal class Particle
+    public abstract class Particle
     {
         public double[] position;
         public double[] velocity;
@@ -19,7 +19,6 @@ namespace OptimizationPSO
             position = new double[numDimensions];
             velocity = new double[numDimensions];
             bestPosition = new double[numDimensions];
-            bestFitness = fitness = -double.MaxValue;
         }
     }
 }
