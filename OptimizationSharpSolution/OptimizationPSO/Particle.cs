@@ -6,22 +6,20 @@ using System.Threading.Tasks;
 
 namespace OptimizationPSO
 {
-    public class Particle
+    internal class Particle
     {
-        public double[] Position { get; internal set; }
-        public double[] Velocity { get; }
-        public double[] BestPosition { get; }
-        public double Fitness { get; }
-        public double BestFitness { get; }
+        public double[] position;
+        public double[] velocity;
+        public double[] bestPosition;
+        public double fitness;
+        public double bestFitness;
 
-        public Particle(double[] position, double[] velocity, double[] bestPosition, double fitness, double bestFitness)
+        public Particle(int numDimensions)
         {
-            Position = position;
-            Velocity = velocity;
-            BestPosition = bestPosition;
-            Fitness = fitness;
-            BestFitness = bestFitness;
+            position = new double[numDimensions];
+            velocity = new double[numDimensions];
+            bestPosition = new double[numDimensions];
+            bestFitness = fitness = -double.MaxValue;
         }
-
     }
 }

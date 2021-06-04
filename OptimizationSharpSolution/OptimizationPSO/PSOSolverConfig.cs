@@ -29,7 +29,9 @@ namespace OptimizationPSO
         public static PSOSolverConfig CreateDefault(int numberParticles, 
             int maxEpochs,
             double[] lowerBound,
-            double[] upperBound)
+            double[] upperBound,
+            double acceptanceError = 1E-09,
+            double particleResetProbability = 0.001)
         {
             if (lowerBound.Length != upperBound.Length)
                 throw new ArgumentException("Dimensions of lower and upper bound do not match");
@@ -38,12 +40,14 @@ namespace OptimizationPSO
                 .WithNumParticles(numberParticles)
                 .WithNumDimensions(lowerBound.Length)
                 .WithMaxEpochs(maxEpochs)
-                .WithAcceptanceError(1E-09)
+                .WithAcceptanceError(acceptanceError)
                 .WithInertiaWeight(0.729)
                 .WithC1CognitiveWeight(1.49445)
                 .WithC2SocialWeight(1.49445)
                 .WithVelocityInitialAttenuation(0.1)
-                .WithParticleResetProbability(0.0)
+                .WithParticleResetProbability(particleResetProbability)
+                .WithLowerBound(lowerBound)
+                .WithUpperBound(upperBound)
                 .Build();
         }
     }

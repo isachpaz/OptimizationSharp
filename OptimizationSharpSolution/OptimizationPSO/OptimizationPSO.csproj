@@ -41,9 +41,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ArrayHelpers.cs" />
     <Compile Include="Particle.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PSOSolver.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PSOResult.cs" />
     <Compile Include="PSOSolverConfig.cs" />
     <Compile Include="PSOSolverConfigBuilder.cs" />
   </ItemGroup>

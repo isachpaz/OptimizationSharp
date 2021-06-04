@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FunctionMinimizationTests.cs" />
     <Compile Include="OptimizationTests.cs" />
     <Compile Include="ParticleTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
