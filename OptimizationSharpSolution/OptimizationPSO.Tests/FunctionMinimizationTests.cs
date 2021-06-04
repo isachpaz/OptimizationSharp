@@ -13,7 +13,7 @@ namespace OptimizationPSO.Tests
                 maxEpochs: 500,
                 lowerBound: new double[] {-20, -20},
                 upperBound: new double[] {10, 10},
-                acceptanceError: 1E-9);
+                acceptanceError: 1E-12);
 
             Func<double[], double> func = x => 100.0 + ((x[0]-10.0) * (x[0]-10.0) + x[1] * x[1]);
 
@@ -29,7 +29,7 @@ namespace OptimizationPSO.Tests
             };
 
             var result = solver.Solve();
-            Assert.AreEqual(0, result.BestPosition[0], 1E-6);
+            Assert.AreEqual(10, result.BestPosition[0], 1E-6);
             Assert.AreEqual(0, result.BestPosition[1], 1E-6);
 
 
