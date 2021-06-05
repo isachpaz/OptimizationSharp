@@ -1,11 +1,14 @@
-﻿namespace OptimizationPSO.RandomEngines
+﻿using System;
+
+namespace OptimizationPSO.RandomEngines
 {
-    public class RandomEngineDefault : IRandomEngine
+    public class DefaultWindowsRandomEngine : IRandomEngine
     {
 
+        Random _rnd = new Random();
         public double NextDouble()
         {
-            
+            return _rnd.NextDouble();
         }
     }
 }

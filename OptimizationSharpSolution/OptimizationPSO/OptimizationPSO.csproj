@@ -53,6 +53,7 @@
     <Compile Include="PSOResult.cs" />
     <Compile Include="PSOSolverConfig.cs" />
     <Compile Include="PSOSolverConfigBuilder.cs" />
+    <Compile Include="RandomEngines\MersenneTwister64.cs" />
     <Compile Include="RandomEngines\MersenneTwisterEngine.cs" />
     <Compile Include="RandomEngines\RandomEngine.cs" />
     <Compile Include="RandomEngines\RandomEngineDefault.cs" />

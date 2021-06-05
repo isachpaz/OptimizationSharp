@@ -40,12 +40,12 @@ namespace OptimizationPSO
         /// </summary>
         /// <param name="config">PSOSolverConfig .</param>
         /// <param name="evalFunc">Evaluation function which takes the particle positions and returns its fitness.</param>
-        public ParticleSwarm(PSOSolverConfig config, Func<double[], double> evalFunc)
+        public ParticleSwarm( Func<double[], double> evalFunc, PSOSolverConfig config, IRandomEngine randomEngine)
         {
             if (config.LowerBound.Length != config.UpperBound.Length)
                 throw new ArgumentException("Dimensions of lower and upper bound do not match");
 
-            
+            _random = randomEngine;
             Config = config;
             this.FitnessFunc = evalFunc;
 

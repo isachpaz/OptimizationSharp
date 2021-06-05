@@ -23,7 +23,7 @@ namespace OptimizationPSO
 
         public int RandomSeed { get; internal set; } = 0;
 
-        public IRandomEngine RanadomEngine { get; internal set; }
+        public IRandomEngine RandomEngine { get; internal set; }
 
         internal PSOSolverConfig()
         {
@@ -52,6 +52,7 @@ namespace OptimizationPSO
                 .WithParticleResetProbability(particleResetProbability)
                 .WithLowerBound(lowerBound)
                 .WithUpperBound(upperBound)
+                .WithRandomEngine(RandomEngineFactory.Create(RandomEngines.RandomEngine.MersenneTwister))
                 .Build();
         }
     }

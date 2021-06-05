@@ -7,10 +7,12 @@
             switch (randomEngine)
             {
                 case RandomEngine.Default:
-                    return new RandomEngineDefault();
+                    return new DefaultWindowsRandomEngine();
                 case RandomEngine.MersenneTwister:
-                    return 
+                    return new MersenneTwisterEngine();
             }
+
+            return null;
         }
     }
 }

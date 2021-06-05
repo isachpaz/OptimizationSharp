@@ -17,7 +17,7 @@ namespace OptimizationPSO.Tests
 
             Func<double[], double> func = x => 100.0 + ((x[0]-10.0) * (x[0]-10.0) + x[1] * x[1]);
 
-            var solver = new ParticleSwarmMinimization(solverConfig, func);
+            var solver = new ParticleSwarmMinimization(func, solverConfig);
 
             solver.OnAfterEpoch += (s, d) =>
             {

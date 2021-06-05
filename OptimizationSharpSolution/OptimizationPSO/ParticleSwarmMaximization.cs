@@ -4,8 +4,8 @@ namespace OptimizationPSO
 {
     public class ParticleSwarmMaximization : ParticleSwarm
     {
-        public ParticleSwarmMaximization(PSOSolverConfig config, Func<double[], double> evalFunc) 
-            : base(config, evalFunc)
+        public ParticleSwarmMaximization(Func<double[], double> evalFunc, PSOSolverConfig config) 
+            : base(evalFunc, config, config.RandomEngine)
         {
         }
 

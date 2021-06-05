@@ -1,4 +1,6 @@
-﻿namespace OptimizationPSO
+﻿using OptimizationPSO.RandomEngines;
+
+namespace OptimizationPSO
 {
     public class PSOSolverConfigBuilder
     {
@@ -80,6 +82,12 @@
         public PSOSolverConfigBuilder WithRandomSeed(int randomSeed)
         {
             _config.RandomSeed = randomSeed;
+            return this;
+        }
+
+        public PSOSolverConfigBuilder WithRandomEngine(IRandomEngine re)
+        {
+            _config.RandomEngine = re;
             return this;
         }
     }
