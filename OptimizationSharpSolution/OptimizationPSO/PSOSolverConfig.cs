@@ -1,4 +1,5 @@
 ﻿using System;
+using OptimizationPSO.RandomEngines;
 
 namespace OptimizationPSO
 {
@@ -22,6 +23,8 @@ namespace OptimizationPSO
 
         public int RandomSeed { get; internal set; } = 0;
 
+        public IRandomEngine RanadomEngine { get; internal set; }
+
         internal PSOSolverConfig()
         {
         }
@@ -35,6 +38,7 @@ namespace OptimizationPSO
         {
             if (lowerBound.Length != upperBound.Length)
                 throw new ArgumentException("Dimensions of lower and upper bound do not match");
+
 
             return PSOSolverConfigBuilder.Init()
                 .WithNumParticles(numberParticles)

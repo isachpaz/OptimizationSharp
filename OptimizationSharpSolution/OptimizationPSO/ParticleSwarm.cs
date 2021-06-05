@@ -1,4 +1,6 @@
-﻿namespace OptimizationPSO
+﻿using OptimizationPSO.RandomEngines;
+
+namespace OptimizationPSO
 {
     using System;
     using System.Threading.Tasks;
@@ -28,7 +30,7 @@
         /// </summary>
         /// <value>The best position.</value>
         public double[] BestPosition { get; protected set; }
-        private Random _random = new Random();
+        private IRandomEngine _random;
         protected Particle[] Particles { get; set; }
         protected Func<double[], double> FitnessFunc { get; }
 
@@ -43,8 +45,10 @@
             if (config.LowerBound.Length != config.UpperBound.Length)
                 throw new ArgumentException("Dimensions of lower and upper bound do not match");
 
+            
             Config = config;
             this.FitnessFunc = evalFunc;
+
         }
 
 
