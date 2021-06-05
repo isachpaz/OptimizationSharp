@@ -44,7 +44,7 @@ namespace OptimizationPSO
                 p.bestFitness = p.fitness;
                 Array.Copy(p.position, p.bestPosition, p.position.Length);
 
-                lock (this)
+                lock (_lock)
                 {
                     if (p.bestFitness > BestFitness)
                     {

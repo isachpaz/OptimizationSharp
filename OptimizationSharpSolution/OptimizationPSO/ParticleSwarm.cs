@@ -9,6 +9,7 @@
     {
         public PSOSolverConfig Config { get; }
         public event EpochDelegate OnAfterEpoch;
+        protected readonly object _lock = new object();
 
         // Particle swarm parameters.
         // https://en.wikipedia.org/wiki/Particle_swarm_optimization
@@ -71,6 +72,7 @@
                     EvaluateParticle(t);
                     MoveParticle(t);
                 }
+
                 //Parallel.For(0, Particles.Length, i =>
                 //{
                 //    EvaluateParticle(Particles[i]);
@@ -83,7 +85,7 @@
                     OnAfterEpoch(this, new PSOResult()
                     {
                         BestFitness = this.BestFitness, 
-                        BestPosition = this.BestPosition.Clone2(), 
+                        BestPosition = this.BestPosition.DeepCopy(), 
                         Success = true,
                         Iterations = this.EpochsTillToSolution,
                     });
@@ -119,7 +121,7 @@
             return new PSOResult()
             {
                 BestFitness = this.BestFitness,
-                BestPosition = this.BestPosition.Clone2(),
+                BestPosition = this.BestPosition.DeepCopy(),
                 Success = true,
                 Iterations = this.EpochsTillToSolution,
             };

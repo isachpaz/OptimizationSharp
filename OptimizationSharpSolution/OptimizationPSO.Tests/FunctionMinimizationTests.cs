@@ -9,8 +9,8 @@ namespace OptimizationPSO.Tests
         public void Square2DFunctionMinimization_Test()
         {
             var solverConfig = PSOSolverConfig.CreateDefault(
-                numberParticles: 50000,
-                maxEpochs: 500,
+                numberParticles: 50,
+                maxEpochs: 100,
                 lowerBound: new double[] {-20, -20},
                 upperBound: new double[] {10, 10},
                 acceptanceError: 1E-12);
