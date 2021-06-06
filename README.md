@@ -10,7 +10,7 @@ Particle Swarm Optimization (PSO) is a computational method for optimization of 
                 maxEpochs: 1000,
                 lowerBound: new double[] {-20, -20},
                 upperBound: new double[] {10, 10},
-                isStoppingCriteriaEnabled: false);
+                isStoppingCriteriaEnabled: false); // If not enabled, the optimization, will run over the total number of epochs (maxEpochs).
                 
       Func<double[], double> func = x => (x[0] * x[0]) + (x[1] * x[1]);
       var solver = new ParticleSwarmMinimization(func, solverConfig);
