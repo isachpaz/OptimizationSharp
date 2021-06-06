@@ -53,11 +53,17 @@
     <Compile Include="PSOResult.cs" />
     <Compile Include="PSOSolverConfig.cs" />
     <Compile Include="PSOSolverConfigBuilder.cs" />
-    <Compile Include="RandomEngines\MersenneTwister64.cs" />
     <Compile Include="RandomEngines\MersenneTwisterEngine.cs" />
     <Compile Include="RandomEngines\RandomEngine.cs" />
     <Compile Include="RandomEngines\RandomEngineDefault.cs" />
     <Compile Include="RandomEngines\RandomEngineFactory.cs" />
+    <Compile Include="StoppingCriteria\AcceptanceErrorLessThanErrorInLast10Solutions.cs" />
+    <Compile Include="StoppingCriteria\BaseStoppingCriterium.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="MathNet.Numerics">
+      <Version>4.15.0</Version>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

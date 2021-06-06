@@ -1,4 +1,9 @@
-﻿using OptimizationPSO.RandomEngines;
+﻿using System.Collections.Generic;
+using System.Diagnostics;
+using System.Diagnostics.Eventing.Reader;
+using MathNet.Numerics.LinearAlgebra.Solvers;
+using OptimizationPSO.RandomEngines;
+using OptimizationPSO.StoppingCriteria;
 
 namespace OptimizationPSO
 {
@@ -12,6 +17,8 @@ namespace OptimizationPSO
         public PSOSolverConfig Config { get; }
         public event EpochDelegate OnAfterEpoch;
         protected readonly object _lock = new object();
+        protected bool IsStoppingCriteriaEnabled { get; set; }
+        protected List<PSOResult> SolutionsHistory { get; } = new List<PSOResult>();
 
         // Particle swarm parameters.
         // https://en.wikipedia.org/wiki/Particle_swarm_optimization
@@ -30,9 +37,12 @@ namespace OptimizationPSO
         /// </summary>
         /// <value>The best position.</value>
         public double[] BestPosition { get; protected set; }
+
         private IRandomEngine _random;
         protected Particle[] Particles { get; set; }
         protected Func<double[], double> FitnessFunc { get; }
+
+        protected List<BaseStoppingCriterium> StoppingCretiria { get; set; } = new List<BaseStoppingCriterium>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="T:ParticleSwarmOptimization.ParticleSwarm"/> class.
@@ -40,7 +50,10 @@ namespace OptimizationPSO
         /// </summary>
         /// <param name="config">PSOSolverConfig .</param>
         /// <param name="evalFunc">Evaluation function which takes the particle positions and returns its fitness.</param>
-        public ParticleSwarm( Func<double[], double> evalFunc, PSOSolverConfig config, IRandomEngine randomEngine)
+        /// <param name="randomEngine"></param>
+        protected ParticleSwarm(Func<double[], double> evalFunc,
+            PSOSolverConfig config,
+            IRandomEngine randomEngine)
         {
             if (config.LowerBound.Length != config.UpperBound.Length)
                 throw new ArgumentException("Dimensions of lower and upper bound do not match");
@@ -48,7 +61,11 @@ namespace OptimizationPSO
             _random = randomEngine;
             Config = config;
             this.FitnessFunc = evalFunc;
+            this.IsStoppingCriteriaEnabled = config.IsStoppingCriteriaEnabled;
 
+            StoppingCretiria.Add(
+                new AcceptanceErrorLessThanErrorInLast10Solutions(SolutionsHistory,
+                    config.AcceptanceError));
         }
 
 
@@ -59,7 +76,7 @@ namespace OptimizationPSO
             return _random.NextDouble() * (max - min) + min;
         }
 
-        private int EpochsTillToSolution { get; set; } = 0;
+        private int ElapsedEpochs { get; set; } = 0;
 
         /// <summary>
         /// Step the particle swarm for a given number of steps.
@@ -68,9 +85,9 @@ namespace OptimizationPSO
         /// <param name="stepFunc">Step function. Takes current iteration counter and returns true when the stepping should be aborted.</param>
         private void Step(int epochs, Func<int, bool> stepFunc)
         {
-            for (int l = 0; l < epochs; l++)
+            for (int epoch = 0; epoch < epochs; epoch++)
             {
-                ++EpochsTillToSolution;
+                ++ElapsedEpochs;
                 foreach (var t in Particles)
                 {
                     EvaluateParticle(t);
@@ -83,17 +100,35 @@ namespace OptimizationPSO
                 //    MoveParticle(Particles[i]);
                 //});
 
-                if (stepFunc(l))
+                if (IsStoppingCriteriaEnabled)
+                {
+                    CopySolutionToHistory(epoch: epoch,
+                        bestFitness: this.BestFitness,
+                        bestPosition: this.BestPosition.DeepCopy());
+                }
+
+                if (stepFunc(epoch))
                     break;
-                if (OnAfterEpoch != null)
-                    OnAfterEpoch(this, new PSOResult()
-                    {
-                        BestFitness = this.BestFitness, 
-                        BestPosition = this.BestPosition.DeepCopy(), 
-                        Success = true,
-                        Iterations = this.EpochsTillToSolution,
-                    });
+
+                OnAfterEpoch?.Invoke(this, new PSOResult()
+                {
+                    BestFitness = this.BestFitness,
+                    BestPosition = this.BestPosition.DeepCopy(),
+                    Success = true,
+                    Iteration = this.ElapsedEpochs,
+                });
             }
+        }
+
+        private void CopySolutionToHistory(int epoch, double bestFitness, double[] bestPosition)
+        {
+            this.SolutionsHistory.Add(new PSOResult()
+            {
+                BestFitness = bestFitness,
+                BestPosition = bestPosition.DeepCopy(),
+                Success = true,
+                Iteration = epoch,
+            });
         }
 
         protected abstract void EvaluateParticle(Particle p);
@@ -120,15 +155,29 @@ namespace OptimizationPSO
 
         public PSOResult Solve()
         {
+            SolutionsHistory.Clear();
+
             Initialize();
-            this.Step(Config.MaxEpochs, i => Math.Abs(BestFitness) < Config.AcceptanceError);
+            this.Step(Config.MaxEpochs,
+                i =>
+                {
+                    Debug.WriteLine($"Math.Abs(BestFitness):{Math.Abs(BestFitness)}" +
+                                    $"Config.AcceptanceError: {Config.AcceptanceError}");
+                    return CanStop();
+                });
+
             return new PSOResult()
             {
                 BestFitness = this.BestFitness,
                 BestPosition = this.BestPosition.DeepCopy(),
                 Success = true,
-                Iterations = this.EpochsTillToSolution,
+                Iteration = this.ElapsedEpochs,
             };
+        }
+
+        private bool CanStop()
+        {
+            return IsStoppingCriteriaEnabled && StoppingCretiria.TrueForAll(x=>x.CanStop());
         }
     }
 }

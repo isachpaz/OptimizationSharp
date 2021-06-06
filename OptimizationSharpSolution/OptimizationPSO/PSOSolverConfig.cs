@@ -24,6 +24,7 @@ namespace OptimizationPSO
         public int RandomSeed { get; internal set; } = 0;
 
         public IRandomEngine RandomEngine { get; internal set; }
+        public bool IsStoppingCriteriaEnabled { get; internal set; }
 
         internal PSOSolverConfig()
         {
@@ -34,7 +35,8 @@ namespace OptimizationPSO
             double[] lowerBound,
             double[] upperBound,
             double acceptanceError = 1E-09,
-            double particleResetProbability = 0.001)
+            double particleResetProbability = 0.001,
+            bool isStoppingCriteriaEnabled = true)
         {
             if (lowerBound.Length != upperBound.Length)
                 throw new ArgumentException("Dimensions of lower and upper bound do not match");
@@ -52,7 +54,8 @@ namespace OptimizationPSO
                 .WithParticleResetProbability(particleResetProbability)
                 .WithLowerBound(lowerBound)
                 .WithUpperBound(upperBound)
-                .WithRandomEngine(RandomEngineFactory.Create(RandomEngines.RandomEngine.MersenneTwister))
+                .WithRandomEngine(RandomEngineFactory.Create(RandomEngines.RandomEngine.MersenneTwister, MathNet.Numerics.Random.RandomSeed.Robust()))
+                .WithStoppingCriteriaEnabled(isStoppingCriteriaEnabled)
                 .Build();
         }
     }

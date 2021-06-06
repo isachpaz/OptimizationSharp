@@ -90,5 +90,12 @@ namespace OptimizationPSO
             _config.RandomEngine = re;
             return this;
         }
+
+        public PSOSolverConfigBuilder WithStoppingCriteriaEnabled(bool canKeepSolutionsHistory)
+        {
+            _config.IsStoppingCriteriaEnabled = canKeepSolutionsHistory;
+            return this;
+        }
+
     }
 }
