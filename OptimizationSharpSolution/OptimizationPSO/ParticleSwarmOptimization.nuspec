@@ -1,0 +1,34 @@
+﻿<?xml version="1.0"?>
+<package >
+	<metadata>
+		<id>ParticleSwarmOptimization</id>
+		<version>1.0.1</version>
+		<title>Particle Swarm Optimization</title>
+		<authors>Ilias Sachpazidis</authors>
+		<owners>Dr. Ilias Sachpazidis</owners>
+		<projectUrl>https://github.com/isachpaz/OptimizationSharp</projectUrl>
+		<license type="file">LICENSE.txt</license>
+		<requireLicenseAcceptance>true</requireLicenseAcceptance>
+		<description>Particle Swarm Optimization</description>
+		<releaseNotes>
+
+			ParticleSwarmOptimization 1.0.1:
+			- ParticleSwarmMaximization added
+			- ParticleSwarmMinimization added
+
+		</releaseNotes>
+		<copyright>Copyright 2020-2021 (c) Dr. Ilias Sachpazidis</copyright>
+		<tags></tags>
+
+		<dependencies>
+			<dependency id="MathNet.Numerics" version="4.15.0" />
+
+		</dependencies>
+
+	</metadata>
+	<files>
+		<file src="bin\Release\*.dll" target="lib\net472"/>
+		<file src="LICENSE.txt" />
+	</files>
+
+</package>
