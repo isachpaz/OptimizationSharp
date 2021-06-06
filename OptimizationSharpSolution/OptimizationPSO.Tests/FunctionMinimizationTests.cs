@@ -11,6 +11,7 @@ namespace OptimizationPSO.Tests
             var solverConfig = PSOSolverConfig.CreateDefault(
                 numberParticles: 500,
                 maxEpochs: 1000,
+                seed: 100,
                 lowerBound: new double[] {-20, -20},
                 upperBound: new double[] {10, 10},
                 isStoppingCriteriaEnabled: false);

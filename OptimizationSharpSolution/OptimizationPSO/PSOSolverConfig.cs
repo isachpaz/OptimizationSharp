@@ -30,17 +30,17 @@ namespace OptimizationPSO
         {
         }
 
-        public static PSOSolverConfig CreateDefault(int numberParticles, 
+        public static PSOSolverConfig CreateDefault(int numberParticles,
             int maxEpochs,
             double[] lowerBound,
             double[] upperBound,
+            int? seed = null,
             double acceptanceError = 1E-09,
             double particleResetProbability = 0.001,
             bool isStoppingCriteriaEnabled = true)
         {
             if (lowerBound.Length != upperBound.Length)
                 throw new ArgumentException("Dimensions of lower and upper bound do not match");
-
 
             return PSOSolverConfigBuilder.Init()
                 .WithNumParticles(numberParticles)
@@ -54,7 +54,8 @@ namespace OptimizationPSO
                 .WithParticleResetProbability(particleResetProbability)
                 .WithLowerBound(lowerBound)
                 .WithUpperBound(upperBound)
-                .WithRandomEngine(RandomEngineFactory.Create(RandomEngines.RandomEngine.MersenneTwister, MathNet.Numerics.Random.RandomSeed.Robust()))
+                .WithRandomEngine(RandomEngineFactory.Create(RandomEngines.RandomEngine.MersenneTwister,
+                    seed ?? MathNet.Numerics.Random.RandomSeed.Robust()))
                 .WithStoppingCriteriaEnabled(isStoppingCriteriaEnabled)
                 .Build();
         }
