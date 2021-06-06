@@ -18,7 +18,7 @@ Particle Swarm Optimization (PSO) is a computational method for optimization of 
       solver.OnAfterEpoch += (s, d) =>
             {
                 Console.WriteLine($"Iteration: {d.Iteration}\n" +
-                                  $"Error function: {d.BestFitness:##.000} \n" +
+                                  $"Best fitness: {d.BestFitness:##.000} \n" +
                                   $"Best global position: " +
                                   $"x1: {d.BestPosition[0]:##.000}" +
                                   $"x2: {d.BestPosition[1]:##.000}");
