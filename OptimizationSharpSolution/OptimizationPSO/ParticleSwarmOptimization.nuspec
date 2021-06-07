@@ -7,6 +7,7 @@
 		<authors>Ilias Sachpazidis</authors>
 		<owners>Dr. Ilias Sachpazidis</owners>
 		<projectUrl>https://github.com/isachpaz/OptimizationSharp</projectUrl>
+		<repository type="git" url="https://github.com/isachpaz/OptimizationSharp" />
 		<license type="file">LICENSE.txt</license>
 		<requireLicenseAcceptance>true</requireLicenseAcceptance>
 		<description>Particle Swarm Optimization</description>
