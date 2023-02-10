@@ -15,6 +15,7 @@ namespace OptimizationPSO
     public abstract class ParticleSwarm
     {
         public PSOSolverConfig Config { get; }
+        public Action<Particle> UpdateParticlePositionFunc { get; }
         public event EpochDelegate OnAfterEpoch;
         protected readonly object _lock = new object();
         protected bool IsStoppingCriteriaEnabled { get; set; }
@@ -44,6 +45,7 @@ namespace OptimizationPSO
 
         protected List<BaseStoppingCriterium> StoppingCretiria { get; set; } = new List<BaseStoppingCriterium>();
 
+        
         /// <summary>
         /// Initializes a new instance of the <see cref="T:ParticleSwarmOptimization.ParticleSwarm"/> class.
         /// The particle swarm maximizes the particle fitness.
@@ -53,13 +55,15 @@ namespace OptimizationPSO
         /// <param name="randomEngine"></param>
         protected ParticleSwarm(Func<double[], double> evalFunc,
             PSOSolverConfig config,
-            IRandomEngine randomEngine)
+            IRandomEngine randomEngine,
+            Action<Particle> updateParticlePositionFunc)
         {
             if (config.LowerBound.Length != config.UpperBound.Length)
                 throw new ArgumentException("Dimensions of lower and upper bound do not match");
 
             _random = randomEngine;
             Config = config;
+            UpdateParticlePositionFunc = updateParticlePositionFunc;
             this.FitnessFunc = evalFunc;
             this.IsStoppingCriteriaEnabled = config.IsStoppingCriteriaEnabled;
 
@@ -150,8 +154,13 @@ namespace OptimizationPSO
                     p.position[i] = Config.UpperBound[i];
                 if (p.position[i] < Config.LowerBound[i])
                     p.position[i] = Config.LowerBound[i];
+
+                UpdateParticlePositionFunc?.Invoke(p);
+
             }
         }
+
+        
 
         public PSOResult Solve()
         {

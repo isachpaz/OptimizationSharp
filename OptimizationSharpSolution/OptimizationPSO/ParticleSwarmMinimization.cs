@@ -4,8 +4,9 @@ namespace OptimizationPSO
 {
     public class ParticleSwarmMinimization : ParticleSwarm
     {
-        public ParticleSwarmMinimization( Func<double[], double> evalFunc, PSOSolverConfig config) 
-            : base( evalFunc, config, config.RandomEngine)
+        public ParticleSwarmMinimization(Func<double[], double> evalFunc, PSOSolverConfig config,
+            Action<Particle> updateParticlePositionFunc = null)
+            : base(evalFunc, config, config.RandomEngine, updateParticlePositionFunc)
         {
         }
 
@@ -30,9 +31,9 @@ namespace OptimizationPSO
                     p.velocity[j] = NextDoubleInRange(-diff, +diff);
                 }
 
+                UpdateParticlePositionFunc?.Invoke(p);
                 Particles[i] = p;
             }
-
         }
 
         protected override void EvaluateParticle(Particle p)
