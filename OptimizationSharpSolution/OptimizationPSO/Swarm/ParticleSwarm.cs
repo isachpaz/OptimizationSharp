@@ -16,7 +16,7 @@ namespace OptimizationPSO.Swarm
         public event EpochDelegate OnAfterEpoch;
         protected readonly object _lock = new object();
         protected bool IsStoppingCriteriaEnabled { get; set; }
-        protected List<PSOResult> SolutionsHistory { get; } = new List<PSOResult>();
+        public List<PSOResult> SolutionsHistory { get; } = new List<PSOResult>();
 
         // Particle swarm parameters.
         // https://en.wikipedia.org/wiki/Particle_swarm_optimization
@@ -38,13 +38,12 @@ namespace OptimizationPSO.Swarm
 
         private IRandomEngine _random;
         protected Particle[] Particles { get; set; }
-        protected Func<double[], double> FitnessFunc { get; }
+        public IEnumerable<Particle> GetParticles() => Particles;
+        public Func<double[], double> FitnessFunc { get; }
 
         public int NumDimensions => Config.NumDimensions;
         public int NumParticles => Config.NumParticles;
-
-
-        protected List<BaseStoppingCriterion> StoppingCretiria { get; set; } = new List<BaseStoppingCriterion>();
+        protected List<BaseStoppingCriterion> StoppingCriteria { get; set; } = new List<BaseStoppingCriterion>();
 
         
         /// <summary>
@@ -69,10 +68,8 @@ namespace OptimizationPSO.Swarm
             this.IsStoppingCriteriaEnabled = config.IsStoppingCriteriaEnabled;
 
             Particles = new Particle[NumParticles];
-            
-            StoppingCretiria.Add(
-                new AcceptanceErrorLessThanErrorInLast10Solutions(SolutionsHistory,
-                    config.AcceptanceError));
+
+            StoppingCriteria.Add(new StandardDeviationOfNBestSolutions(acceptanceError:1E-6));
         }
 
 
@@ -186,7 +183,7 @@ namespace OptimizationPSO.Swarm
 
         private bool CanStop()
         {
-            return IsStoppingCriteriaEnabled && StoppingCretiria.TrueForAll(x=>x.CanStop());
+            return IsStoppingCriteriaEnabled && StoppingCriteria.TrueForAll(x=>x.CanStop(this));
         }
     }
 }
