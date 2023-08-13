@@ -1,9 +1,11 @@
-﻿namespace OptimizationPSO.StoppingCriteria
+﻿using OptimizationPSO.Swarm;
+
+namespace OptimizationPSO.StoppingCriteria
 {
     public abstract class BaseStoppingCriterion
     {
         public string Description { get; }
-        public abstract bool CanStop();
+        public abstract bool CanStop(ParticleSwarm particleSwarm);
 
         protected BaseStoppingCriterion(string description)
         {
