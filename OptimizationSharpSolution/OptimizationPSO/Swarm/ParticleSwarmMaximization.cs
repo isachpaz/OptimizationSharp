@@ -15,10 +15,8 @@ namespace OptimizationPSO.Swarm
         {
             base.Initialize();
             BestFitness = -double.MaxValue;
-
             BestPosition = new double[NumDimensions];
-            Particles = new Particle[NumParticles];
-
+            
             for (int i = 0; i < NumParticles; i++)
             {
                 var p = new ParticleMaximization(NumDimensions);

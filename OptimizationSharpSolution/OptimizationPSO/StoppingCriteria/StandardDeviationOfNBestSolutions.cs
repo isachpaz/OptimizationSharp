@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using MathNet.Numerics.Statistics;
 using OptimizationPSO.Particles;
 using OptimizationPSO.Swarm;
 
@@ -23,10 +24,12 @@ namespace OptimizationPSO.StoppingCriteria
         private double CalculateStandardDeviation(ParticleSwarm particleSwarm)
         {
             var n = particleSwarm.NumDimensions;
-            var averagef = particleSwarm.GetParticles().Take(n + 1).Select(x => x.bestFitness).Average();
-            var sd = particleSwarm.GetParticles().Take(n + 1).Select(x => Math.Pow(x.bestFitness - averagef, 2))
-                .Average();
-            return Math.Sqrt(sd);
+            //var averagef = particleSwarm.GetParticles().Take(n + 1).Select(x => x.bestFitness).Average();
+            //var sd = particleSwarm.GetParticles().Take(n + 1).Select(x => Math.Pow(x.bestFitness - averagef, 2))
+            //    .Average();
+            //sd = Math.Sqrt(sd);
+            var sd = particleSwarm.GetParticles().Take(n + 1).Select(x => x.bestFitness).StandardDeviation();
+            return sd;
         }
     }
 }

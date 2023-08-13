@@ -9,12 +9,16 @@ namespace OptimizationPSO.Swarm
 {
     public class ParticleSwarmMinimizationNelderMead : ParticleSwarm
     {
+        public NMSolverConfig NmConfig { get; }
+
         public ParticleSwarmMinimizationNelderMead(
-    Func<double[], double> evalFunc,
-    PSOSolverConfig config,
-    Action<Particle> updateParticlePositionFunc = null)
-    : base(evalFunc, config, config.RandomEngine, updateParticlePositionFunc)
+            Func<double[], double> evalFunc,
+            PSOSolverConfig psoConfig,
+            NMSolverConfig nmConfig,
+            Action<Particle> updateParticlePositionFunc = null)
+            : base(evalFunc, psoConfig, psoConfig.RandomEngine, updateParticlePositionFunc)
         {
+            NmConfig = nmConfig;
         }
 
         protected override void Initialize()
@@ -48,42 +52,42 @@ namespace OptimizationPSO.Swarm
 
         protected override void RunNMOpt(int n)
         {
-            var dimension = Particles.FirstOrDefault().bestPosition.Length;
-            Vector<double> bestPosition = new DenseVector(Particles.FirstOrDefault()?.position);
+            var dimension = Particles?.FirstOrDefault()?.bestPosition.Length;
+            Vector<double> bestPosition = new DenseVector(Particles?.FirstOrDefault()?.position);
             double bestFitness = Double.MaxValue;
 
-            // For the first to n+1 particles, run NM
-            for (int i = 0; i <= n + 1; i++)
+            if (Particles != null)
             {
-                var particle = Particles[i];
-                var f1 = new Func<Vector<double>, double>(
-                    x => FitnessFunc(x.ToArray()));
-                var obj = ObjectiveFunction.Value(f1);
-
-                var solver = new NelderMeadSimplex(1e-10, maximumIterations: 500);
-                var initialGuess = new DenseVector(particle.bestPosition);
-
-                var result = solver.FindMinimum(obj, initialGuess);
-                var position = result.FunctionInfoAtMinimum.Point;
-                var newBestValue = result.FunctionInfoAtMinimum.Value;
-
-                if (newBestValue < bestFitness)
+                // For the first to n+1 particles, run NM
+                foreach (var particle in Particles.Take(n + 1))
                 {
-                    bestFitness = newBestValue;
-                    bestPosition = position;
+                    var f1 = new Func<Vector<double>, double>(
+                        x => FitnessFunc(x.ToArray()));
+                    var obj = ObjectiveFunction.Value(f1);
+
+                    var solver = new NelderMeadSimplex(NmConfig.ConvergenceTolerance, NmConfig.MaximumIterations);
+                    var initialGuess = new DenseVector(particle.bestPosition);
+
+                    var result = solver.FindMinimum(obj, initialGuess);
+                    var position = result.FunctionInfoAtMinimum.Point;
+                    var newBestValue = result.FunctionInfoAtMinimum.Value;
+
+                    if (newBestValue < bestFitness)
+                    {
+                        bestFitness = newBestValue;
+                        bestPosition = position;
+                    }
                 }
 
+                Particles[n + 1].bestFitness = bestFitness;
+                Array.Copy(bestPosition.ToArray(), Particles[n + 1].bestPosition, bestPosition.Count);
+
+                if (bestFitness < BestFitness)
+                {
+                    BestFitness = bestFitness;
+                    Array.Copy(bestPosition.ToArray(), BestPosition, bestPosition.Count);
+                }
             }
-
-            Particles[n + 1].bestFitness = bestFitness;
-            Array.Copy(bestPosition.ToArray(), Particles[n + 1].bestPosition, bestPosition.Count);
-
-            if (bestFitness < BestFitness)
-            {
-                BestFitness = bestFitness;
-                Array.Copy(bestPosition.ToArray(), BestPosition, bestPosition.Count);
-            }
-
         }
 
         protected override void EvaluateParticle(Particle p)
@@ -105,6 +109,5 @@ namespace OptimizationPSO.Swarm
                 }
             }
         }
-
     }
 }

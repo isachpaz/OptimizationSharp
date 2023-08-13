@@ -27,7 +27,7 @@ namespace OptimizationPSO
 
         public IRandomEngine RandomEngine { get; internal set; }
         public bool IsStoppingCriteriaEnabled { get; internal set; }
-        private List<BaseStoppingCriterion> StoppingCriteria { get; set; } = new List<BaseStoppingCriterion>();
+        public List<BaseStoppingCriterion> StoppingCriteria { get; set; } = new List<BaseStoppingCriterion>();
 
         internal PSOSolverConfig()
         {

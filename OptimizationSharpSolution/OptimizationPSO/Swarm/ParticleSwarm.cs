@@ -37,7 +37,7 @@ namespace OptimizationPSO.Swarm
         public double[] BestPosition { get; protected set; }
 
         private IRandomEngine _random;
-        protected Particle[] Particles { get; set; }
+        protected Particle[] Particles { get; }
         public IEnumerable<Particle> GetParticles() => Particles;
         public Func<double[], double> FitnessFunc { get; }
 
@@ -69,7 +69,7 @@ namespace OptimizationPSO.Swarm
 
             Particles = new Particle[NumParticles];
 
-            StoppingCriteria.Add(new StandardDeviationOfNBestSolutions(acceptanceError: 1E-6));
+            StoppingCriteria.AddRange(config.StoppingCriteria);
         }
 
 
