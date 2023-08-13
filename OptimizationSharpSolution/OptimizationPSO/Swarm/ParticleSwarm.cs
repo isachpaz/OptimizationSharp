@@ -85,7 +85,7 @@ namespace OptimizationPSO.Swarm
         private int ElapsedEpochs { get; set; } = 0;
 
         protected abstract void SortParticles();
-        protected abstract void RunNMOpt(int i);
+        protected abstract void RunNMOptAndMoveParticles(int i);
 
         /// <summary>
         /// Step the particle swarm for a given number of steps.
@@ -104,7 +104,8 @@ namespace OptimizationPSO.Swarm
                 }
 
                 SortParticles();
-                RunNMOpt(Config.NumDimensions);
+                RunNMOptAndMoveParticles(Config.NumDimensions);
+                
 
                 if (cancelationTokenFunc(epoch))
                     break;
@@ -132,7 +133,7 @@ namespace OptimizationPSO.Swarm
 
         protected abstract void EvaluateParticle(Particle p);
 
-        private void MoveParticle(Particle p)
+        protected void MoveParticle(Particle p)
         {
             for (int i = 0; i < p.position.Length; i++)
             {

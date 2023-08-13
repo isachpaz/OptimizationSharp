@@ -7,6 +7,12 @@ namespace OptimizationPSO.Tests
 {
     public class FunctionMinimizationTests
     {
+
+        public void Test1()
+        {
+
+        }
+
         [Test]
         public void Square2DFunctionMinimization_Test()
         {

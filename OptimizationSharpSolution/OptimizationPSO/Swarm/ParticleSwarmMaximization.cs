@@ -37,7 +37,7 @@ namespace OptimizationPSO.Swarm
             
         }
 
-        protected override void RunNMOpt(int i)
+        protected override void RunNMOptAndMoveParticles(int i)
         {
             
         }

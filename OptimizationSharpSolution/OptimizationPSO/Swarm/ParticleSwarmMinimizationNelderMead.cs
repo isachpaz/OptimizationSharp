@@ -51,7 +51,7 @@ namespace OptimizationPSO.Swarm
             Array.Sort(Particles, new ParticleComparer());
         }
 
-        protected override void RunNMOpt(int n)
+        protected override void RunNMOptAndMoveParticles(int n)
         {
             var dimension = Particles?.FirstOrDefault()?.bestPosition.Length;
             Vector<double> bestPosition = new DenseVector(Particles?.FirstOrDefault()?.position);
@@ -68,7 +68,10 @@ namespace OptimizationPSO.Swarm
 
                     try
                     {
-                        var solver = new NelderMeadSimplex(NmConfig.ConvergenceTolerance, NmConfig.MaximumIterations);
+                        var solver = new NelderMeadSimplex(
+                            NmConfig.ConvergenceTolerance, 
+                            NmConfig.MaximumIterations);
+
                         var initialGuess = new DenseVector(particle.bestPosition);
 
                         var result = solver.FindMinimum(obj, initialGuess);
@@ -89,12 +92,20 @@ namespace OptimizationPSO.Swarm
                 }
 
                 Particles[n + 1].bestFitness = bestFitness;
+                Particles[n + 1].fitness = bestFitness;
+
                 Array.Copy(bestPosition.ToArray(), Particles[n + 1].bestPosition, bestPosition.Count);
+                Array.Copy(bestPosition.ToArray(), Particles[n + 1].position, bestPosition.Count);
 
                 if (bestFitness < BestFitness)
                 {
                     BestFitness = bestFitness;
                     Array.Copy(bestPosition.ToArray(), BestPosition, bestPosition.Count);
+                }
+
+                foreach (var t in Particles)
+                {
+                    MoveParticle(t);
                 }
             }
         }
