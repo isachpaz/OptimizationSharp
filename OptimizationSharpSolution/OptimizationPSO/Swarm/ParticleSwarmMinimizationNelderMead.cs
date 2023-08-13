@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
@@ -65,18 +66,26 @@ namespace OptimizationPSO.Swarm
                         x => FitnessFunc(x.ToArray()));
                     var obj = ObjectiveFunction.Value(f1);
 
-                    var solver = new NelderMeadSimplex(NmConfig.ConvergenceTolerance, NmConfig.MaximumIterations);
-                    var initialGuess = new DenseVector(particle.bestPosition);
-
-                    var result = solver.FindMinimum(obj, initialGuess);
-                    var position = result.FunctionInfoAtMinimum.Point;
-                    var newBestValue = result.FunctionInfoAtMinimum.Value;
-
-                    if (newBestValue < bestFitness)
+                    try
                     {
-                        bestFitness = newBestValue;
-                        bestPosition = position;
+                        var solver = new NelderMeadSimplex(NmConfig.ConvergenceTolerance, NmConfig.MaximumIterations);
+                        var initialGuess = new DenseVector(particle.bestPosition);
+
+                        var result = solver.FindMinimum(obj, initialGuess);
+                        var position = result.FunctionInfoAtMinimum.Point;
+                        var newBestValue = result.FunctionInfoAtMinimum.Value;
+
+                        if (newBestValue < bestFitness)
+                        {
+                            bestFitness = newBestValue;
+                            bestPosition = position;
+                        }
                     }
+                    catch (MaximumIterationsException e)
+                    {
+                        Trace.WriteLine(e.Message);
+                    }
+                    
                 }
 
                 Particles[n + 1].bestFitness = bestFitness;

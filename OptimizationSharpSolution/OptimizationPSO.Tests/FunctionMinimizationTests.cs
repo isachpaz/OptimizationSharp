@@ -22,7 +22,9 @@ namespace OptimizationPSO.Tests
 
             Func<double[], double> func = x => 100.0 + ((x[0]-10.0) * (x[0]-10.0) + x[1] * x[1]);
 
-            var solver = new ParticleSwarmMinimizationNelderMead(func, solverConfig, NMSolverConfig.Default());
+            //var solver = new ParticleSwarmMinimizationNelderMead(func, solverConfig, NMSolverConfig.Default());
+            var solver = new ParticleSwarmMinimizationNelderMead(func, solverConfig, new NMSolverConfig(1E-6,100));
+
 
             solver.OnAfterEpoch += (s, d) =>
             {
