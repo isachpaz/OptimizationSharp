@@ -7,8 +7,6 @@ namespace OptimizationPSO.StoppingCriteria
 {
     public class StandardDeviationOfNBestSolutions : BaseStoppingCriterion
     {
-        //private readonly Particle[] _particles;
-        //private readonly int _nSolutions;
         private readonly double _acceptanceError;
 
         public StandardDeviationOfNBestSolutions(double acceptanceError) : base("StandardDeviationOfNBestSolutions")

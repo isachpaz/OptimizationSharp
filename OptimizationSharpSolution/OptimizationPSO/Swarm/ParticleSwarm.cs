@@ -45,7 +45,7 @@ namespace OptimizationPSO.Swarm
         public int NumParticles => Config.NumParticles;
         protected List<BaseStoppingCriterion> StoppingCriteria { get; set; } = new List<BaseStoppingCriterion>();
 
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="T:ParticleSwarmOptimization.ParticleSwarm"/> class.
         /// The particle swarm maximizes the particle fitness.
@@ -69,13 +69,12 @@ namespace OptimizationPSO.Swarm
 
             Particles = new Particle[NumParticles];
 
-            StoppingCriteria.Add(new StandardDeviationOfNBestSolutions(acceptanceError:1E-6));
+            StoppingCriteria.Add(new StandardDeviationOfNBestSolutions(acceptanceError: 1E-6));
         }
 
 
         protected virtual void Initialize()
         {
-
         }
 
         protected double NextDoubleInRange(double min, double max)
@@ -84,6 +83,9 @@ namespace OptimizationPSO.Swarm
         }
 
         private int ElapsedEpochs { get; set; } = 0;
+
+        protected abstract void SortParticles();
+        protected abstract void RunNMOpt(int i);
 
         /// <summary>
         /// Step the particle swarm for a given number of steps.
@@ -101,12 +103,8 @@ namespace OptimizationPSO.Swarm
                     MoveParticle(t);
                 }
 
-                if (IsStoppingCriteriaEnabled)
-                {
-                    CopySolutionToHistory(epoch: epoch,
-                        bestFitness: this.BestFitness,
-                        bestPosition: this.BestPosition.DeepCopy());
-                }
+                SortParticles();
+                RunNMOpt(Config.NumDimensions);
 
                 if (cancelationTokenFunc(epoch))
                     break;
@@ -153,11 +151,9 @@ namespace OptimizationPSO.Swarm
                     p.position[i] = Config.LowerBound[i];
 
                 UpdateParticlePositionFunc?.Invoke(p);
-
             }
         }
 
-        
 
         public PSOResult Solve()
         {
@@ -183,7 +179,7 @@ namespace OptimizationPSO.Swarm
 
         private bool CanStop()
         {
-            return IsStoppingCriteriaEnabled && StoppingCriteria.TrueForAll(x=>x.CanStop(this));
+            return IsStoppingCriteriaEnabled && StoppingCriteria.TrueForAll(x => x.CanStop(this));
         }
     }
 }

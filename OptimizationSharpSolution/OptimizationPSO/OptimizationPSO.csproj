@@ -42,6 +42,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ArrayHelpers.cs" />
+    <Compile Include="Particles\ParticleComparer.cs" />
     <Compile Include="RandomEngines\IRandomEngine.cs" />
     <Compile Include="Particles\Particle.cs" />
     <Compile Include="Particles\ParticleMaximization.cs" />
@@ -60,6 +61,7 @@
     <Compile Include="RandomEngines\RandomEngineFactory.cs" />
     <Compile Include="StoppingCriteria\AcceptanceErrorLessThanErrorInLast10Solutions.cs" />
     <Compile Include="StoppingCriteria\BaseStoppingCriterion.cs" />
+    <Compile Include="Swarm\ParticleSwarmMinimizationNelderMead.cs" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="MathNet.Numerics">

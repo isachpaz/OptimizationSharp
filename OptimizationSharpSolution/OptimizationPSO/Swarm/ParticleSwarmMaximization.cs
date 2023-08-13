@@ -34,6 +34,16 @@ namespace OptimizationPSO.Swarm
             }
         }
 
+        protected override void SortParticles()
+        {
+            
+        }
+
+        protected override void RunNMOpt(int i)
+        {
+            
+        }
+
         protected override void EvaluateParticle(Particle p)
         {
             p.fitness = FitnessFunc(p.position);
