@@ -1,15 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.Eventing.Reader;
-using MathNet.Numerics.LinearAlgebra.Solvers;
+using OptimizationPSO.Particles;
 using OptimizationPSO.RandomEngines;
 using OptimizationPSO.StoppingCriteria;
 
-namespace OptimizationPSO
+namespace OptimizationPSO.Swarm
 {
-    using System;
-    using System.Threading.Tasks;
-
     public delegate void EpochDelegate(ParticleSwarm sender, PSOResult result);
 
     public abstract class ParticleSwarm
@@ -43,7 +40,11 @@ namespace OptimizationPSO
         protected Particle[] Particles { get; set; }
         protected Func<double[], double> FitnessFunc { get; }
 
-        protected List<BaseStoppingCriterium> StoppingCretiria { get; set; } = new List<BaseStoppingCriterium>();
+        public int NumDimensions => Config.NumDimensions;
+        public int NumParticles => Config.NumParticles;
+
+
+        protected List<BaseStoppingCriterion> StoppingCretiria { get; set; } = new List<BaseStoppingCriterion>();
 
         
         /// <summary>
@@ -67,13 +68,18 @@ namespace OptimizationPSO
             this.FitnessFunc = evalFunc;
             this.IsStoppingCriteriaEnabled = config.IsStoppingCriteriaEnabled;
 
+            Particles = new Particle[NumParticles];
+            
             StoppingCretiria.Add(
                 new AcceptanceErrorLessThanErrorInLast10Solutions(SolutionsHistory,
                     config.AcceptanceError));
         }
 
 
-        protected abstract void Initialize();
+        protected virtual void Initialize()
+        {
+
+        }
 
         protected double NextDoubleInRange(double min, double max)
         {
@@ -86,8 +92,8 @@ namespace OptimizationPSO
         /// Step the particle swarm for a given number of steps.
         /// </summary>
         /// <param name="epochs">Maximum number of steps.</param>
-        /// <param name="stepFunc">Step function. Takes current iteration counter and returns true when the stepping should be aborted.</param>
-        private void Step(int epochs, Func<int, bool> stepFunc)
+        /// <param name="cancelationTokenFunc">Step function. Takes current iteration counter and returns true when the stepping should be aborted.</param>
+        private void Step(int epochs, Func<int, bool> cancelationTokenFunc)
         {
             for (int epoch = 0; epoch < epochs; epoch++)
             {
@@ -98,12 +104,6 @@ namespace OptimizationPSO
                     MoveParticle(t);
                 }
 
-                //Parallel.For(0, Particles.Length, i =>
-                //{
-                //    EvaluateParticle(Particles[i]);
-                //    MoveParticle(Particles[i]);
-                //});
-
                 if (IsStoppingCriteriaEnabled)
                 {
                     CopySolutionToHistory(epoch: epoch,
@@ -111,7 +111,7 @@ namespace OptimizationPSO
                         bestPosition: this.BestPosition.DeepCopy());
                 }
 
-                if (stepFunc(epoch))
+                if (cancelationTokenFunc(epoch))
                     break;
 
                 OnAfterEpoch?.Invoke(this, new PSOResult()
@@ -168,7 +168,7 @@ namespace OptimizationPSO
 
             Initialize();
             this.Step(Config.MaxEpochs,
-                i =>
+                epoch =>
                 {
                     Debug.WriteLine($"Math.Abs(BestFitness):{Math.Abs(BestFitness)}" +
                                     $"Config.AcceptanceError: {Config.AcceptanceError}");

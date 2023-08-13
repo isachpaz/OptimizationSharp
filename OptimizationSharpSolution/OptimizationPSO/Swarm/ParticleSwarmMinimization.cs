@@ -1,10 +1,13 @@
 ﻿using System;
+using OptimizationPSO.Particles;
 
-namespace OptimizationPSO
+namespace OptimizationPSO.Swarm
 {
     public class ParticleSwarmMinimization : ParticleSwarm
     {
-        public ParticleSwarmMinimization(Func<double[], double> evalFunc, PSOSolverConfig config,
+        public ParticleSwarmMinimization(
+            Func<double[], double> evalFunc, 
+            PSOSolverConfig config,
             Action<Particle> updateParticlePositionFunc = null)
             : base(evalFunc, config, config.RandomEngine, updateParticlePositionFunc)
         {
@@ -12,14 +15,12 @@ namespace OptimizationPSO
 
         protected override void Initialize()
         {
-            var numDimensions = Config.LowerBound.Length;
-            var numParticles = Config.NumParticles;
-
+            base.Initialize();
+            var numDimensions = base.NumDimensions;
+            var numParticles = base.NumParticles;
             BestFitness = double.MaxValue;
-
             BestPosition = new double[numDimensions];
-            Particles = new Particle[numParticles];
-
+            
             for (int i = 0; i < numParticles; i++)
             {
                 var p = new ParticleMinimization(numDimensions);

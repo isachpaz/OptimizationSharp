@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using OptimizationPSO.RandomEngines;
+using OptimizationPSO.StoppingCriteria;
 
 namespace OptimizationPSO
 {
@@ -25,12 +27,14 @@ namespace OptimizationPSO
 
         public IRandomEngine RandomEngine { get; internal set; }
         public bool IsStoppingCriteriaEnabled { get; internal set; }
+        private List<BaseStoppingCriterion> StoppingCriteria { get; set; } = new List<BaseStoppingCriterion>();
 
         internal PSOSolverConfig()
         {
         }
 
-        public static PSOSolverConfig CreateDefault(int numberParticles,
+        public static PSOSolverConfig CreateDefault(
+            int numberParticles,
             int maxEpochs,
             double[] lowerBound,
             double[] upperBound,

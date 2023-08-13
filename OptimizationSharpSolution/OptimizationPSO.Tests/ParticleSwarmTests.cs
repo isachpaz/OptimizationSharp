@@ -2,6 +2,8 @@
 using System.Diagnostics;
 using System.Xml.Serialization;
 using NUnit.Framework;
+using OptimizationPSO.Particles;
+using OptimizationPSO.Swarm;
 
 namespace OptimizationPSO.Tests
 {

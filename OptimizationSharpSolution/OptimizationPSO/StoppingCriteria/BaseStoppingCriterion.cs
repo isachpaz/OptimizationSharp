@@ -1,11 +1,11 @@
 ﻿namespace OptimizationPSO.StoppingCriteria
 {
-    public abstract class BaseStoppingCriterium
+    public abstract class BaseStoppingCriterion
     {
         public string Description { get; }
         public abstract bool CanStop();
 
-        protected BaseStoppingCriterium(string description)
+        protected BaseStoppingCriterion(string description)
         {
             Description = description;
         }

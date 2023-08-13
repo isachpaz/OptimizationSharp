@@ -5,7 +5,7 @@ using MathNet.Numerics.Statistics;
 
 namespace OptimizationPSO.StoppingCriteria
 {
-    public class AcceptanceErrorLessThanErrorInLast10Solutions : BaseStoppingCriterium
+    public class AcceptanceErrorLessThanErrorInLast10Solutions : BaseStoppingCriterion
     {
         private readonly List<PSOResult> _solutionsHistory;
         private readonly double _acceptanceError;

@@ -1,29 +1,29 @@
 ﻿using System;
+using OptimizationPSO.Particles;
 
-namespace OptimizationPSO
+namespace OptimizationPSO.Swarm
 {
     public class ParticleSwarmMaximization : ParticleSwarm
     {
-        public ParticleSwarmMaximization(Func<double[], double> evalFunc, PSOSolverConfig config, Action<Particle> updateParticlePositionFunc = null) 
+        public ParticleSwarmMaximization(Func<double[], double> evalFunc, PSOSolverConfig config,
+            Action<Particle> updateParticlePositionFunc = null)
             : base(evalFunc, config, config.RandomEngine, updateParticlePositionFunc)
         {
         }
 
         protected override void Initialize()
         {
-            var numDimensions = Config.LowerBound.Length;
-            var numParticles = Config.NumParticles;
-
+            base.Initialize();
             BestFitness = -double.MaxValue;
 
-            BestPosition = new double[numDimensions];
-            Particles = new Particle[numParticles];
+            BestPosition = new double[NumDimensions];
+            Particles = new Particle[NumParticles];
 
-            for (int i = 0; i < numParticles; i++)
+            for (int i = 0; i < NumParticles; i++)
             {
-                var p = new ParticleMaximization(numDimensions);
+                var p = new ParticleMaximization(NumDimensions);
 
-                for (int j = 0; j < numDimensions; j++)
+                for (int j = 0; j < NumDimensions; j++)
                 {
                     var diff = Config.UpperBound[j] - Config.LowerBound[j];
                     p.position[j] = NextDoubleInRange(Config.LowerBound[j], Config.UpperBound[j]);
@@ -32,7 +32,6 @@ namespace OptimizationPSO
 
                 Particles[i] = p;
             }
-
         }
 
         protected override void EvaluateParticle(Particle p)
@@ -53,7 +52,6 @@ namespace OptimizationPSO
                     }
                 }
             }
-
         }
     }
 }
