@@ -53,6 +53,7 @@ namespace OptimizationPSO.Swarm
 
         protected override void RunNMOptAndMoveParticles(int n)
         {
+            Console.WriteLine("RunNMOptAndMoveParticles");
             var dimension = Particles?.FirstOrDefault()?.bestPosition.Length;
             Vector<double> bestPosition = new DenseVector(Particles?.FirstOrDefault()?.position);
             double bestFitness = Double.MaxValue;
@@ -60,12 +61,12 @@ namespace OptimizationPSO.Swarm
             if (Particles != null)
             {
                 // For the first to n+1 particles, run NM
-                foreach (var particle in Particles.Take(n + 1))
+                foreach (var particle in Particles.Take(n + 2))
                 {
                     var f1 = new Func<Vector<double>, double>(
                         x => FitnessFunc(x.ToArray()));
                     var obj = ObjectiveFunction.Value(f1);
-
+                    
                     try
                     {
                         var solver = new NelderMeadSimplex(
@@ -103,6 +104,7 @@ namespace OptimizationPSO.Swarm
                     Array.Copy(bestPosition.ToArray(), BestPosition, bestPosition.Count);
                 }
 
+                Console.WriteLine("RunNMOptAndMoveParticles ended");
                 foreach (var t in Particles)
                 {
                     MoveParticle(t);
@@ -119,7 +121,7 @@ namespace OptimizationPSO.Swarm
                 p.bestFitness = p.fitness;
                 Array.Copy(p.position, p.bestPosition, p.position.Length);
 
-                lock (_lock)
+                //lock (_lock)
                 {
                     if (p.bestFitness < BestFitness)
                     {

@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("OptimizationPSO")]
-[assembly: AssemblyDescription("Particle Swarm Optimization")]
+[assembly: AssemblyTitle("OptimizationNM")]
+[assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Dr. Ilias Sachpazidis")]
-[assembly: AssemblyProduct("OptimizationPSO")]
-[assembly: AssemblyCopyright("Copyright ©  2020 -2023 Dr. Ilias Sachpazidis")]
+[assembly: AssemblyCompany("")]
+[assembly: AssemblyProduct("OptimizationNM")]
+[assembly: AssemblyCopyright("Copyright ©  2023")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("f10a4fe2-9585-4ef5-93a7-9b124c050898")]
+[assembly: Guid("9363475d-6162-4fa2-9c52-c677d1d198d6")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.6.0")]
-[assembly: AssemblyFileVersion("1.0.6.0")]
+[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyFileVersion("1.0.0.0")]

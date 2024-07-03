@@ -105,8 +105,8 @@ namespace OptimizationPSO.Swarm
 
                 SortParticles();
                 RunNMOptAndMoveParticles(Config.NumDimensions);
-                
 
+                SortParticles();
                 if (cancelationTokenFunc(epoch))
                     break;
 

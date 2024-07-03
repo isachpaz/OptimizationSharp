@@ -9,7 +9,7 @@ namespace OptimizationPSO.Particles
             if (ReferenceEquals(x, y)) return 0;
             if (ReferenceEquals(null, y)) return 1;
             if (ReferenceEquals(null, x)) return -1;
-            var fitnessComparison = x.fitness.CompareTo(y.fitness);
+            var fitnessComparison = x.bestFitness.CompareTo(y.bestFitness);
             if (fitnessComparison != 0) return fitnessComparison;
             return x.bestFitness.CompareTo(y.bestFitness);
         }

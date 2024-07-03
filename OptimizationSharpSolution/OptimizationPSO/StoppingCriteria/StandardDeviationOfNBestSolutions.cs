@@ -24,11 +24,25 @@ namespace OptimizationPSO.StoppingCriteria
         private double CalculateStandardDeviation(ParticleSwarm particleSwarm)
         {
             var n = particleSwarm.NumDimensions;
-            //var averagef = particleSwarm.GetParticles().Take(n + 1).Select(x => x.bestFitness).Average();
-            //var sd = particleSwarm.GetParticles().Take(n + 1).Select(x => Math.Pow(x.bestFitness - averagef, 2))
-            //    .Average();
-            //sd = Math.Sqrt(sd);
-            var sd = particleSwarm.GetParticles().Take(n + 1).Select(x => x.bestFitness).StandardDeviation();
+
+            if (n < 3)
+                n = 3;
+            
+            var bestOnes = particleSwarm.GetParticles().Take(n).ToList();
+
+            var average = bestOnes.Select(x => x.bestFitness).Average();
+            var sd1 = bestOnes.Select(x => Math.Pow(x.bestFitness - average, 2))
+                .Average();
+            sd1 = Math.Sqrt(sd1);
+
+            var sd = bestOnes.Select(x => x.bestFitness).StandardDeviation();
+            Console.WriteLine($"======================== SD={sd:E5}");
+
+            var tolerance = 1E-6;
+            var max = bestOnes.Max(x => x.bestFitness);
+            var min = bestOnes.Min(x => x.bestFitness);
+            var sIndex = 2.0*(max - min)/(min+max+tolerance);
+            Console.WriteLine($"======================== sIndex={sIndex:E5}");
             return sd;
         }
     }

@@ -2,7 +2,7 @@
 <package >
 	<metadata>
 		<id>ParticleSwarmOptimization</id>
-		<version>1.0.5</version>
+		<version>1.0.6</version>
 		<title>Particle Swarm Optimization</title>
 		<authors>Ilias Sachpazidis</authors>
 		<owners>Dr. Ilias Sachpazidis</owners>
@@ -12,6 +12,8 @@
 		<requireLicenseAcceptance>true</requireLicenseAcceptance>
 		<description>Particle Swarm Optimization</description>
 		<releaseNotes>
+			ParticleSwarmOptimization 1.0.6:
+				- RunNMOptAndMoveParticles
 
 			ParticleSwarmOptimization 1.0.5:
 				- Bugfixed: Nelder-Mead Simplex MaximumIterationsException
