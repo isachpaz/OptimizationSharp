@@ -30,10 +30,7 @@ namespace Optimization.Helpers
                 combos = combos.SelectMany(r => inner
                     .Select(x => {
                         var n = r.DeepClone();
-                        if (x != null)
-                        {
-                            n.Add(x);
-                        }
+                        n.Add(x);
                         return n;
                     }).ToList());
             }
