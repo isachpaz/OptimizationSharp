@@ -48,6 +48,7 @@
     <Compile Include="Particles\Particle.cs" />
     <Compile Include="Particles\ParticleMaximization.cs" />
     <Compile Include="Particles\ParticleMinimization.cs" />
+    <Compile Include="StoppingCriteria\MaxIterationsStoppingCriterion.cs" />
     <Compile Include="StoppingCriteria\StandardDeviationOfNBestSolutions.cs" />
     <Compile Include="Swarm\ParticleSwarm.cs" />
     <Compile Include="Swarm\ParticleSwarmMaximization.cs" />
