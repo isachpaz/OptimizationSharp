@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using OptimizationPSO.Particles;
 using OptimizationPSO.RandomEngines;
 using OptimizationPSO.StoppingCriteria;
@@ -15,7 +16,7 @@ namespace OptimizationPSO.Swarm
         public Action<Particle> UpdateParticlePositionFunc { get; }
         public event EpochDelegate OnAfterEpoch;
         protected readonly object _lock = new object();
-        protected bool IsStoppingCriteriaEnabled { get; set; }
+        //protected bool IsStoppingCriteriaEnabled { get; set; }
         public List<PSOResult> SolutionsHistory { get; } = new List<PSOResult>();
 
         // Particle swarm parameters.
@@ -65,7 +66,7 @@ namespace OptimizationPSO.Swarm
             Config = config;
             UpdateParticlePositionFunc = updateParticlePositionFunc;
             this.FitnessFunc = evalFunc;
-            this.IsStoppingCriteriaEnabled = config.IsStoppingCriteriaEnabled;
+            //this.IsStoppingCriteriaEnabled = config.IsStoppingCriteriaEnabled;
 
             Particles = new Particle[NumParticles];
 
@@ -91,8 +92,8 @@ namespace OptimizationPSO.Swarm
         /// Step the particle swarm for a given number of steps.
         /// </summary>
         /// <param name="epochs">Maximum number of steps.</param>
-        /// <param name="cancelationTokenFunc">Step function. Takes current iteration counter and returns true when the stepping should be aborted.</param>
-        private void Step(int epochs, Func<int, bool> cancelationTokenFunc)
+        /// <param name="cancellationTokenFunc">Step function. Takes current iteration counter and returns true when the stepping should be aborted.</param>
+        private void Step(int epochs, Func<int, bool> cancellationTokenFunc)
         {
             for (int epoch = 0; epoch < epochs; epoch++)
             {
@@ -107,7 +108,7 @@ namespace OptimizationPSO.Swarm
                 RunNMOptAndMoveParticles(Config.NumDimensions);
 
                 SortParticles();
-                if (cancelationTokenFunc(epoch))
+                if (cancellationTokenFunc(epoch))
                     break;
 
                 OnAfterEpoch?.Invoke(this, new PSOResult()
@@ -118,17 +119,6 @@ namespace OptimizationPSO.Swarm
                     Iteration = this.ElapsedEpochs,
                 });
             }
-        }
-
-        private void CopySolutionToHistory(int epoch, double bestFitness, double[] bestPosition)
-        {
-            this.SolutionsHistory.Add(new PSOResult()
-            {
-                BestFitness = bestFitness,
-                BestPosition = bestPosition.DeepCopy(),
-                Success = true,
-                Iteration = epoch,
-            });
         }
 
         protected abstract void EvaluateParticle(Particle p);
@@ -180,7 +170,8 @@ namespace OptimizationPSO.Swarm
 
         private bool CanStop()
         {
-            return IsStoppingCriteriaEnabled && StoppingCriteria.TrueForAll(x => x.CanStop(this));
+            return StoppingCriteria.Any(x => x.CanStop(this));
+            //return IsStoppingCriteriaEnabled && StoppingCriteria.TrueForAll(x => x.CanStop(this));
         }
     }
 }
