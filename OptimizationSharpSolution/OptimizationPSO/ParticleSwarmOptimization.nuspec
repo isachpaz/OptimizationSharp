@@ -41,13 +41,13 @@
 		<tags></tags>
 
 		<dependencies>
-			<dependency id="MathNet.Numerics" version="4.15.0" />
+			<dependency id="MathNet.Numerics" version="[4.15.0,)" />
 
 		</dependencies>
 
 	</metadata>
 	<files>
-		<file src="bin\Release\*.dll" target="lib\net472"/>
+		<file src="bin\Release\Opt*.dll" target="lib\net472"/>
 		<file src="LICENSE.txt" />
 	</files>
 
