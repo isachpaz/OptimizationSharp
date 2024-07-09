@@ -152,12 +152,7 @@ namespace OptimizationPSO.Swarm
 
             Initialize();
             this.Step(Config.MaxEpochs,
-                epoch =>
-                {
-                    Debug.WriteLine($"Math.Abs(BestFitness):{Math.Abs(BestFitness)}" +
-                                    $"Config.AcceptanceError: {Config.AcceptanceError}");
-                    return CanStop();
-                });
+                epoch => CanStop());
 
             return new PSOResult()
             {
