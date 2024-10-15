@@ -24,7 +24,8 @@ namespace OptimizationPSO.Tests
                 isStoppingCriteriaEnabled: true);
             ParticleSwarm ps = new ParticleSwarmMinimization(func, conf);
             var result = ps.Solve();
-            Assert.Less(result.Iteration, 100);
+            
+            Assert.That(result.Iteration, Is.LessThan(100));
         } 
         
         [Test]
@@ -48,7 +49,8 @@ namespace OptimizationPSO.Tests
 
             ParticleSwarm ps = new ParticleSwarmMinimization(func, conf, updateParticleFunc);
             var result = ps.Solve();
-            Assert.Less(result.Iteration, 100);
+            
+            Assert.That(result.Iteration, Is.LessThan(100));
         }
     }
 }

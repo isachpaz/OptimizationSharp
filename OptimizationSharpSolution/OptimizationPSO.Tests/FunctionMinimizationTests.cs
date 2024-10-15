@@ -42,9 +42,9 @@ namespace OptimizationPSO.Tests
             };
 
             var result = solver.Solve();
-            Assert.AreEqual(10, result.BestPosition[0], 1E-6);
-            Assert.AreEqual(0, result.BestPosition[1], 1E-6);
-
+            Assert.That(result.BestPosition[0], Is.EqualTo(10).Within(1E-6));
+            Assert.That(result.BestPosition[1], Is.EqualTo(0).Within(1E-6));
+            
 
         }
     }

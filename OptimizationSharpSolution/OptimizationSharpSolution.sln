@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OptimizationPSO.Tests", "Op
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Optimization.Helpers", "Optimization.Helpers\Optimization.Helpers.csproj", "{9F675C7C-D1E0-4969-AE9D-8FB979027655}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdaptiveSimplexOptimization", "AdaptiveSimplexOptimization\AdaptiveSimplexOptimization.csproj", "{E4D756AB-355E-4245-8AC1-A7095A8302C3}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AdaptiveSimplexOptimizationTests", "AdaptiveSimplexOptimizationTests\AdaptiveSimplexOptimizationTests.csproj", "{39FA4088-565F-431E-A5EA-A1A7EDA383B0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +31,14 @@ Global
 		{9F675C7C-D1E0-4969-AE9D-8FB979027655}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9F675C7C-D1E0-4969-AE9D-8FB979027655}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9F675C7C-D1E0-4969-AE9D-8FB979027655}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E4D756AB-355E-4245-8AC1-A7095A8302C3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E4D756AB-355E-4245-8AC1-A7095A8302C3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E4D756AB-355E-4245-8AC1-A7095A8302C3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E4D756AB-355E-4245-8AC1-A7095A8302C3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39FA4088-565F-431E-A5EA-A1A7EDA383B0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39FA4088-565F-431E-A5EA-A1A7EDA383B0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39FA4088-565F-431E-A5EA-A1A7EDA383B0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39FA4088-565F-431E-A5EA-A1A7EDA383B0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
