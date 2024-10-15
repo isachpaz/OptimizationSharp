@@ -2,7 +2,7 @@
 <package >
 	<metadata>
 		<id>ParticleSwarmOptimization</id>
-		<version>1.0.7</version>
+		<version>1.0.8</version>
 		<title>Particle Swarm Optimization</title>
 		<authors>Ilias Sachpazidis</authors>
 		<owners>Dr. Ilias Sachpazidis</owners>
@@ -12,6 +12,9 @@
 		<requireLicenseAcceptance>true</requireLicenseAcceptance>
 		<description>Particle Swarm Optimization</description>
 		<releaseNotes>
+			ParticleSwarmOptimization 1.0.8:
+				- AdaptiveSimplexOptimization (Nelder-Mead Simplex) added.
+
 			ParticleSwarmOptimization 1.0.7:
 				- StoppingCriteria strategy changed. If any of the stopping criteria is true, then CanStop() returns true. 
 				**Heads up**: In previous versions, all stopping criteria had to be true for CanStop() to return true.
@@ -37,17 +40,17 @@
 
 
 		</releaseNotes>
-		<copyright>Copyright 2020-2023 (c) Dr. Ilias Sachpazidis</copyright>
+		<copyright>Copyright 2020-2024 (c) Dr. Ilias Sachpazidis</copyright>
 		<tags></tags>
 
 		<dependencies>
-			<dependency id="MathNet.Numerics" version="[4.15.0,)" />
+			<dependency id="MathNet.Numerics" version="[5.0.0,)" />
 
 		</dependencies>
 
 	</metadata>
 	<files>
-		<file src="bin\Release\Opt*.dll" target="lib\net472"/>
+		<file src="FinalReleases\*.dll" target="lib\net472"/>
 		<file src="LICENSE.txt" />
 	</files>
 
