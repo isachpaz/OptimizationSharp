@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F10A4FE2-9585-4EF5-93A7-9B124C050898}</ProjectGuid>
+    <ProjectGuid>{9F675C7C-D1E0-4969-AE9D-8FB979027655}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>OptimizationPSO</RootNamespace>
-    <AssemblyName>OptimizationPSO</AssemblyName>
+    <RootNamespace>Optimization.Helpers</RootNamespace>
+    <AssemblyName>Optimization.Helpers</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <Deterministic>true</Deterministic>
@@ -41,38 +41,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ArrayHelpers.cs" />
-    <Compile Include="NMSolverConfig.cs" />
-    <Compile Include="Particles\ParticleComparer.cs" />
-    <Compile Include="RandomEngines\IRandomEngine.cs" />
-    <Compile Include="Particles\Particle.cs" />
-    <Compile Include="Particles\ParticleMaximization.cs" />
-    <Compile Include="Particles\ParticleMinimization.cs" />
-    <Compile Include="StoppingCriteria\MaxIterationsStoppingCriterion.cs" />
-    <Compile Include="StoppingCriteria\StandardDeviationOfNBestSolutions.cs" />
-    <Compile Include="Swarm\ParticleSwarm.cs" />
-    <Compile Include="Swarm\ParticleSwarmMaximization.cs" />
-    <Compile Include="Swarm\ParticleSwarmMinimization.cs" />
+    <Compile Include="OptHelpers.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="PSOResult.cs" />
-    <Compile Include="PSOSolverConfig.cs" />
-    <Compile Include="PSOSolverConfigBuilder.cs" />
-    <Compile Include="RandomEngines\MersenneTwisterEngine.cs" />
-    <Compile Include="RandomEngines\RandomEngine.cs" />
-    <Compile Include="RandomEngines\RandomEngineDefault.cs" />
-    <Compile Include="RandomEngines\RandomEngineFactory.cs" />
-    <Compile Include="StoppingCriteria\AcceptanceErrorLessThanErrorInLast10Solutions.cs" />
-    <Compile Include="StoppingCriteria\BaseStoppingCriterion.cs" />
-    <Compile Include="Swarm\ParticleSwarmMinimizationNelderMead.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <PackageReference Include="MathNet.Numerics">
-      <Version>4.15.0</Version>
-    </PackageReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ParticleSwarmOptimization.nuspec" />
-  </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

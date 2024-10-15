@@ -1,10 +1,18 @@
 ﻿using System;
 using NUnit.Framework;
+using OptimizationPSO.StoppingCriteria;
+using OptimizationPSO.Swarm;
 
 namespace OptimizationPSO.Tests
 {
     public class FunctionMinimizationTests
     {
+
+        public void Test1()
+        {
+
+        }
+
         [Test]
         public void Square2DFunctionMinimization_Test()
         {
@@ -14,11 +22,15 @@ namespace OptimizationPSO.Tests
                 seed: 100,
                 lowerBound: new double[] {-20, -20},
                 upperBound: new double[] {10, 10},
-                isStoppingCriteriaEnabled: false);
+                isStoppingCriteriaEnabled: true);
+            
+            solverConfig.StoppingCriteria.Add(new StandardDeviationOfNBestSolutions(acceptanceError:1E-12));
 
             Func<double[], double> func = x => 100.0 + ((x[0]-10.0) * (x[0]-10.0) + x[1] * x[1]);
 
-            var solver = new ParticleSwarmMinimization(func, solverConfig);
+            //var solver = new ParticleSwarmMinimizationNelderMead(func, solverConfig, NMSolverConfig.Default());
+            var solver = new ParticleSwarmMaximization(func, solverConfig);
+
 
             solver.OnAfterEpoch += (s, d) =>
             {

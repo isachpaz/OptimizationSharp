@@ -2,6 +2,9 @@
 using System.Diagnostics;
 using System.Xml.Serialization;
 using NUnit.Framework;
+using OptimizationPSO.Particles;
+using OptimizationPSO.StoppingCriteria;
+using OptimizationPSO.Swarm;
 
 namespace OptimizationPSO.Tests
 {
@@ -36,6 +39,7 @@ namespace OptimizationPSO.Tests
                 acceptanceError: 1E-16,
                 isStoppingCriteriaEnabled: true);
             
+            conf.StoppingCriteria.Add(new StandardDeviationOfNBestSolutions(1e-03));
             Action<Particle> updateParticleFunc = particle =>
             {
                 particle.position[1] = particle.position[0];

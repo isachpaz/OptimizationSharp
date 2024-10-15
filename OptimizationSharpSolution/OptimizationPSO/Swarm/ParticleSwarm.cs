@@ -1,15 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
-using System.Diagnostics.Eventing.Reader;
-using MathNet.Numerics.LinearAlgebra.Solvers;
+using System.Linq;
+using OptimizationPSO.Particles;
 using OptimizationPSO.RandomEngines;
 using OptimizationPSO.StoppingCriteria;
 
-namespace OptimizationPSO
+namespace OptimizationPSO.Swarm
 {
-    using System;
-    using System.Threading.Tasks;
-
     public delegate void EpochDelegate(ParticleSwarm sender, PSOResult result);
 
     public abstract class ParticleSwarm
@@ -18,8 +16,8 @@ namespace OptimizationPSO
         public Action<Particle> UpdateParticlePositionFunc { get; }
         public event EpochDelegate OnAfterEpoch;
         protected readonly object _lock = new object();
-        protected bool IsStoppingCriteriaEnabled { get; set; }
-        protected List<PSOResult> SolutionsHistory { get; } = new List<PSOResult>();
+        //protected bool IsStoppingCriteriaEnabled { get; set; }
+        public List<PSOResult> SolutionsHistory { get; } = new List<PSOResult>();
 
         // Particle swarm parameters.
         // https://en.wikipedia.org/wiki/Particle_swarm_optimization
@@ -40,12 +38,15 @@ namespace OptimizationPSO
         public double[] BestPosition { get; protected set; }
 
         private IRandomEngine _random;
-        protected Particle[] Particles { get; set; }
-        protected Func<double[], double> FitnessFunc { get; }
+        protected Particle[] Particles { get; }
+        public IEnumerable<Particle> GetParticles() => Particles;
+        public Func<double[], double> FitnessFunc { get; }
 
-        protected List<BaseStoppingCriterium> StoppingCretiria { get; set; } = new List<BaseStoppingCriterium>();
+        public int NumDimensions => Config.NumDimensions;
+        public int NumParticles => Config.NumParticles;
+        protected List<BaseStoppingCriterion> StoppingCriteria { get; set; } = new List<BaseStoppingCriterion>();
 
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="T:ParticleSwarmOptimization.ParticleSwarm"/> class.
         /// The particle swarm maximizes the particle fitness.
@@ -65,15 +66,17 @@ namespace OptimizationPSO
             Config = config;
             UpdateParticlePositionFunc = updateParticlePositionFunc;
             this.FitnessFunc = evalFunc;
-            this.IsStoppingCriteriaEnabled = config.IsStoppingCriteriaEnabled;
+            //this.IsStoppingCriteriaEnabled = config.IsStoppingCriteriaEnabled;
 
-            StoppingCretiria.Add(
-                new AcceptanceErrorLessThanErrorInLast10Solutions(SolutionsHistory,
-                    config.AcceptanceError));
+            Particles = new Particle[NumParticles];
+
+            StoppingCriteria.AddRange(config.StoppingCriteria);
         }
 
 
-        protected abstract void Initialize();
+        protected virtual void Initialize()
+        {
+        }
 
         protected double NextDoubleInRange(double min, double max)
         {
@@ -82,12 +85,15 @@ namespace OptimizationPSO
 
         private int ElapsedEpochs { get; set; } = 0;
 
+        protected abstract void SortParticles();
+        protected abstract void RunNMOptAndMoveParticles(int i);
+
         /// <summary>
         /// Step the particle swarm for a given number of steps.
         /// </summary>
         /// <param name="epochs">Maximum number of steps.</param>
-        /// <param name="stepFunc">Step function. Takes current iteration counter and returns true when the stepping should be aborted.</param>
-        private void Step(int epochs, Func<int, bool> stepFunc)
+        /// <param name="cancellationTokenFunc">Step function. Takes current iteration counter and returns true when the stepping should be aborted.</param>
+        private void Step(int epochs, Func<int, bool> cancellationTokenFunc)
         {
             for (int epoch = 0; epoch < epochs; epoch++)
             {
@@ -98,20 +104,11 @@ namespace OptimizationPSO
                     MoveParticle(t);
                 }
 
-                //Parallel.For(0, Particles.Length, i =>
-                //{
-                //    EvaluateParticle(Particles[i]);
-                //    MoveParticle(Particles[i]);
-                //});
+                SortParticles();
+                RunNMOptAndMoveParticles(Config.NumDimensions);
 
-                if (IsStoppingCriteriaEnabled)
-                {
-                    CopySolutionToHistory(epoch: epoch,
-                        bestFitness: this.BestFitness,
-                        bestPosition: this.BestPosition.DeepCopy());
-                }
-
-                if (stepFunc(epoch))
+                SortParticles();
+                if (cancellationTokenFunc(epoch))
                     break;
 
                 OnAfterEpoch?.Invoke(this, new PSOResult()
@@ -124,20 +121,9 @@ namespace OptimizationPSO
             }
         }
 
-        private void CopySolutionToHistory(int epoch, double bestFitness, double[] bestPosition)
-        {
-            this.SolutionsHistory.Add(new PSOResult()
-            {
-                BestFitness = bestFitness,
-                BestPosition = bestPosition.DeepCopy(),
-                Success = true,
-                Iteration = epoch,
-            });
-        }
-
         protected abstract void EvaluateParticle(Particle p);
 
-        private void MoveParticle(Particle p)
+        protected void MoveParticle(Particle p)
         {
             for (int i = 0; i < p.position.Length; i++)
             {
@@ -156,11 +142,9 @@ namespace OptimizationPSO
                     p.position[i] = Config.LowerBound[i];
 
                 UpdateParticlePositionFunc?.Invoke(p);
-
             }
         }
 
-        
 
         public PSOResult Solve()
         {
@@ -168,12 +152,7 @@ namespace OptimizationPSO
 
             Initialize();
             this.Step(Config.MaxEpochs,
-                i =>
-                {
-                    Debug.WriteLine($"Math.Abs(BestFitness):{Math.Abs(BestFitness)}" +
-                                    $"Config.AcceptanceError: {Config.AcceptanceError}");
-                    return CanStop();
-                });
+                epoch => CanStop());
 
             return new PSOResult()
             {
@@ -186,7 +165,8 @@ namespace OptimizationPSO
 
         private bool CanStop()
         {
-            return IsStoppingCriteriaEnabled && StoppingCretiria.TrueForAll(x=>x.CanStop());
+            return StoppingCriteria.Any(x => x.CanStop(this));
+            //return IsStoppingCriteriaEnabled && StoppingCriteria.TrueForAll(x => x.CanStop(this));
         }
     }
 }

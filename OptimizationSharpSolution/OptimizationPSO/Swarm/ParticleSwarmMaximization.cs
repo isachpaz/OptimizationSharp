@@ -1,10 +1,11 @@
 ﻿using System;
+using OptimizationPSO.Particles;
 
-namespace OptimizationPSO
+namespace OptimizationPSO.Swarm
 {
-    public class ParticleSwarmMinimization : ParticleSwarm
+    public class ParticleSwarmMaximization : ParticleSwarm
     {
-        public ParticleSwarmMinimization(Func<double[], double> evalFunc, PSOSolverConfig config,
+        public ParticleSwarmMaximization(Func<double[], double> evalFunc, PSOSolverConfig config,
             Action<Particle> updateParticlePositionFunc = null)
             : base(evalFunc, config, config.RandomEngine, updateParticlePositionFunc)
         {
@@ -12,42 +13,47 @@ namespace OptimizationPSO
 
         protected override void Initialize()
         {
-            var numDimensions = Config.LowerBound.Length;
-            var numParticles = Config.NumParticles;
-
-            BestFitness = double.MaxValue;
-
-            BestPosition = new double[numDimensions];
-            Particles = new Particle[numParticles];
-
-            for (int i = 0; i < numParticles; i++)
+            base.Initialize();
+            BestFitness = -double.MaxValue;
+            BestPosition = new double[NumDimensions];
+            
+            for (int i = 0; i < NumParticles; i++)
             {
-                var p = new ParticleMinimization(numDimensions);
+                var p = new ParticleMaximization(NumDimensions);
 
-                for (int j = 0; j < numDimensions; j++)
+                for (int j = 0; j < NumDimensions; j++)
                 {
                     var diff = Config.UpperBound[j] - Config.LowerBound[j];
                     p.position[j] = NextDoubleInRange(Config.LowerBound[j], Config.UpperBound[j]);
                     p.velocity[j] = NextDoubleInRange(-diff, +diff);
                 }
 
-                UpdateParticlePositionFunc?.Invoke(p);
                 Particles[i] = p;
             }
+        }
+
+        protected override void SortParticles()
+        {
+            
+        }
+
+        protected override void RunNMOptAndMoveParticles(int i)
+        {
+            
         }
 
         protected override void EvaluateParticle(Particle p)
         {
             p.fitness = FitnessFunc(p.position);
 
-            if (p.fitness < p.bestFitness)
+            if (p.fitness > p.bestFitness)
             {
                 p.bestFitness = p.fitness;
                 Array.Copy(p.position, p.bestPosition, p.position.Length);
 
                 lock (_lock)
                 {
-                    if (p.bestFitness < BestFitness)
+                    if (p.bestFitness > BestFitness)
                     {
                         BestFitness = p.bestFitness;
                         Array.Copy(p.bestPosition, BestPosition, p.bestPosition.Length);

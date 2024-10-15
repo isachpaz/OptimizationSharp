@@ -1,27 +1,33 @@
 ﻿using System;
+using System.Linq;
+using MathNet.Numerics.LinearAlgebra;
+using MathNet.Numerics.LinearAlgebra.Double;
+using MathNet.Numerics.Optimization;
+using OptimizationPSO.Particles;
 
-namespace OptimizationPSO
+namespace OptimizationPSO.Swarm
 {
-    public class ParticleSwarmMaximization : ParticleSwarm
+    public class ParticleSwarmMinimization : ParticleSwarm
     {
-        public ParticleSwarmMaximization(Func<double[], double> evalFunc, PSOSolverConfig config, Action<Particle> updateParticlePositionFunc = null) 
+        public ParticleSwarmMinimization(
+            Func<double[], double> evalFunc, 
+            PSOSolverConfig config,
+            Action<Particle> updateParticlePositionFunc = null)
             : base(evalFunc, config, config.RandomEngine, updateParticlePositionFunc)
         {
         }
 
         protected override void Initialize()
         {
-            var numDimensions = Config.LowerBound.Length;
-            var numParticles = Config.NumParticles;
-
-            BestFitness = -double.MaxValue;
-
+            base.Initialize();
+            var numDimensions = base.NumDimensions;
+            var numParticles = base.NumParticles;
+            BestFitness = double.MaxValue;
             BestPosition = new double[numDimensions];
-            Particles = new Particle[numParticles];
-
+            
             for (int i = 0; i < numParticles; i++)
             {
-                var p = new ParticleMaximization(numDimensions);
+                var p = new ParticleMinimization(numDimensions);
 
                 for (int j = 0; j < numDimensions; j++)
                 {
@@ -30,8 +36,18 @@ namespace OptimizationPSO
                     p.velocity[j] = NextDoubleInRange(-diff, +diff);
                 }
 
+                UpdateParticlePositionFunc?.Invoke(p);
                 Particles[i] = p;
             }
+        }
+
+        protected override void SortParticles()
+        {
+           
+        }
+
+        protected override void RunNMOptAndMoveParticles(int n)
+        {
 
         }
 
@@ -39,21 +55,20 @@ namespace OptimizationPSO
         {
             p.fitness = FitnessFunc(p.position);
 
-            if (p.fitness > p.bestFitness)
+            if (p.fitness < p.bestFitness)
             {
                 p.bestFitness = p.fitness;
                 Array.Copy(p.position, p.bestPosition, p.position.Length);
 
                 lock (_lock)
                 {
-                    if (p.bestFitness > BestFitness)
+                    if (p.bestFitness < BestFitness)
                     {
                         BestFitness = p.bestFitness;
                         Array.Copy(p.bestPosition, BestPosition, p.bestPosition.Length);
                     }
                 }
             }
-
         }
     }
 }

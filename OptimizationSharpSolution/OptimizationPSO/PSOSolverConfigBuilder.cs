@@ -1,4 +1,6 @@
-﻿using OptimizationPSO.RandomEngines;
+﻿using System.Collections.Generic;
+using OptimizationPSO.RandomEngines;
+using OptimizationPSO.StoppingCriteria;
 
 namespace OptimizationPSO
 {
@@ -97,5 +99,10 @@ namespace OptimizationPSO
             return this;
         }
 
+        public PSOSolverConfigBuilder WithStoppingCriteria(List<BaseStoppingCriterion> stoppingCriteria)
+        {
+            _config.StoppingCriteria.AddRange(stoppingCriteria);
+            return this;
+        }
     }
 }

@@ -1,4 +1,4 @@
-﻿namespace OptimizationPSO
+﻿namespace OptimizationPSO.Particles
 {
     public class ParticleMinimization : Particle
     {
