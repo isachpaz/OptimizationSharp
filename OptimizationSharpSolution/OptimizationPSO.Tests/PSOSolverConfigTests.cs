@@ -9,23 +9,23 @@ namespace OptimizationPSO.Tests
         [Test]
         public void PSOSolverConfig_CreateDefault_Test()
         {
-            var lowerBound = new double[] {-10.0, -11.0, -20.0};
-            var upperBound = new double[] {10.0, 11.0, 20.0};
+            var lowerBound = new double[] { -10.0, -11.0, -20.0 };
+            var upperBound = new double[] { 10.0, 11.0, 20.0 };
 
             var config = PSOSolverConfig.CreateDefault(numberParticles: 100,
                 maxEpochs: 20,
-                lowerBound: new double[] {-10.0, -11.0, -20.0},
-                upperBound: new double[] {10.0, 11.0, 20.0});
+                lowerBound: new double[] { -10.0, -11.0, -20.0 },
+                upperBound: new double[] { 10.0, 11.0, 20.0 });
 
-            Assert.AreEqual(config.NumDimensions, upperBound.Length);
-            Assert.AreEqual(config.NumParticles, 100);
-            Assert.AreEqual(config.MaxEpochs, 20);
-            Assert.AreEqual(config.AcceptanceError, 1E-09);
-            Assert.AreEqual(config.InertiaWeight, 0.729);
-            Assert.AreEqual(config.C1CognitiveWeight, 1.49445);
-            Assert.AreEqual(config.C2SocialWeight, 1.49445);
-            Assert.AreEqual(config.VelocityInitialAttenuation, 0.1);
-            Assert.AreEqual(config.ParticleResetProbability, 0.001);
+            Assert.That(config.NumDimensions, Is.EqualTo(upperBound.Length));
+            Assert.That(config.NumParticles, Is.EqualTo(100));
+            Assert.That(config.MaxEpochs, Is.EqualTo(20));
+            Assert.That(config.AcceptanceError, Is.EqualTo(1E-09));
+            Assert.That(config.InertiaWeight, Is.EqualTo(0.729));
+            Assert.That(config.C1CognitiveWeight, Is.EqualTo(1.49445));
+            Assert.That(config.C2SocialWeight, Is.EqualTo(1.49445));
+            Assert.That(config.VelocityInitialAttenuation, Is.EqualTo(0.1));
+            Assert.That(config.ParticleResetProbability, Is.EqualTo(0.001));
         }
 
         [Test]
@@ -33,8 +33,8 @@ namespace OptimizationPSO.Tests
         {
             Assert.Throws<ArgumentException>(() => PSOSolverConfig.CreateDefault(numberParticles: 100,
                 maxEpochs: 20,
-                lowerBound: new double[] {-10.0, -11.0, -20.0},
-                upperBound: new double[] {10.0, 11.0})
+                lowerBound: new double[] { -10.0, -11.0, -20.0 },
+                upperBound: new double[] { 10.0, 11.0 })
             );
         }
     }
