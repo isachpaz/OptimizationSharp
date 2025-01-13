@@ -44,10 +44,17 @@ namespace AdaptiveSimplexOptimizationTests
         [Test]
         public void Minimize2DQuadraticWithMultiInitialGuessesTest()
         {
-            Func<Vector<double>, double> objectiveFunction = v => Math.Pow(v[0] - 3, 2) + Math.Pow(v[1] - 2, 2);
+            // Define the objective function
+            Func<Vector<double>, double> objectiveFunction = v =>
+                Math.Pow(v[0] - 3, 2) + Math.Pow(v[1] - 2, 2);
 
-            var minimizer = new NelderMeadMinimizer(objectiveFunction);
+            // Define valid bounds
+            var bounds = new List<(double Min, double Max)> { (-10, 10), (-10, 10) };
 
+            // Initialize the Nelder-Mead minimizer with the function and bounds
+            var minimizer = new NelderMeadMinimizer(objectiveFunction, bounds);
+
+            // Define multiple initial guesses
             var initialGuesses = new List<Vector<double>>
             {
                 Vector<double>.Build.DenseOfArray(new double[] { 0.0, 0.0 }),
@@ -57,7 +64,9 @@ namespace AdaptiveSimplexOptimizationTests
 
             var bestSolution = minimizer.MinimizeMultiple(initialGuesses);
 
-            Console.WriteLine($"Best solution found at: ({bestSolution.MinimizingPoint[0]}, {bestSolution.MinimizingPoint[1]})");
+            Assert.That(bestSolution.MinimizingPoint[0], Is.EqualTo(3.0).Within(1e-6));
+            Assert.That(bestSolution.MinimizingPoint[1], Is.EqualTo(2.0).Within(1e-6));
+            
         } 
         
         [Test]
@@ -74,7 +83,7 @@ namespace AdaptiveSimplexOptimizationTests
             var minimizer = new NelderMeadMinimizer(objectiveFunction, bounds);
             int numInitialGuesses = 10;
 
-            var bestSolution = minimizer.MinimizeMultiple(numInitialGuesses);
+            var bestSolution = minimizer.MinimizeMultipleWithPerturbations(numInitialGuesses);
 
             Console.WriteLine($"Best solution found at: ({bestSolution.MinimizingPoint[0]}, {bestSolution.MinimizingPoint[1]})");
         }
