@@ -49,6 +49,7 @@
 
 		<dependencies>
 			<dependency id="MathNet.Numerics" version="[5.0.0,)" />
+			<dependency id="Microsoft.Extensions.Logging.Abstractions" version="[9.0.0,)" />
 
 		</dependencies>
 
