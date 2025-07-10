@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using MathNet.Numerics.LinearAlgebra;
 using MathNet.Numerics.LinearAlgebra.Double;
 using MathNet.Numerics.Optimization;
+using System.Threading.Tasks;
 
 namespace AdaptiveSimplexOptimization
 {
@@ -79,6 +80,19 @@ namespace AdaptiveSimplexOptimization
 
             return GetBestSolution();
         }
+        public MinimizationResult MinimizeMultipleWithPerturbationsInParallel(int numInitialGuesses)
+        {
+            var initialGuesses = HammersleySequence.GeneratePoints(numInitialGuesses, _bounds);
+            var perturbation = CreatePerturbationVector();
+
+            var options = new ParallelOptions { MaxDegreeOfParallelism = Environment.ProcessorCount };
+            Parallel.ForEach(initialGuesses, options, guess =>
+            {
+                Minimize(guess, perturbation);
+            });
+
+            return GetBestSolution();
+        }
 
         private Vector<double> MinimizeInternal(Vector<double> initialGuess, Vector<double> perturbation)
         {
@@ -88,8 +102,8 @@ namespace AdaptiveSimplexOptimization
             }
 
             var initialPoint = new DenseVector(initialGuess.ToArray());
-            MinimizationResult result;
-
+            MinimizationResult result = new MinimizationResult(ObjectiveFunction.Value(_objectiveFunction), _maximumIterations,ExitCondition.ExceedIterations);
+            
             try
             {
                 result = perturbation == null
@@ -110,7 +124,6 @@ namespace AdaptiveSimplexOptimization
             catch (Exception ex)
             {
                 _logger?.LogError(ex, "Error during optimization.");
-                throw;
             }
 
             return result.MinimizingPoint;
